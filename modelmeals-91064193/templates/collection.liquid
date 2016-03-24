@@ -1,0 +1,67 @@
+{% paginate collection.products by 50 %}
+
+{% if collection.image %}<div class="collection-image" style="background-image: url('{{ collection.image | img_url: '2048x2048' }}');"> {% endif %}
+  <div class="collection-title text-center">
+    <div class="grid">
+      <h1 class="collection-text--headline title grid__item one-whole">{{ collection.title }}</h1>
+      {% if collection.description.size > 0 %}
+      <div class="collection-text--body text-center rte grid__item large--three-fifths push--large--one-fifth">
+        <p class="h4--body">{{ collection.description }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% if collection.image %}<div class="collection-image-overlay"></div>
+</div>
+{% endif %}
+
+<div class="wrapper">
+  {% if settings.collection_sorting %}
+  <div class="row text-right collection__sort">
+    {% include 'collection-sorting' %}
+  </div>
+  {% endif %}
+  <div class="page-margin grid--rev">
+    {% if settings.collection_custom_nav_list != blank or settings.collection_type_nav or settings.collection_vendor_nav or settings.collection_tag_nav %}
+    <div class="grid__item large--three-quarters">
+    {% else  %}
+    <div class="grid__item one-whole">
+    {% endif %}
+      <div class="grid-uniform">
+        {% assign grid_width_large = {{settings.global_grid_width_large}} %}
+        {% assign grid_width_medium = {{settings.global_grid_width_medium}} %}
+        {% assign grid_width_small = {{settings.global_grid_width_small}} %}
+        {% for product in collection.products %}
+          {% include 'product-grid-item' %}
+        {% else %}
+          {% if collection.handle == 'all'%}
+            {% unless emptyState %}
+              {{ 'theme-onboarding.css' | asset_url | stylesheet_tag }}
+              {% assign emptyState = true %}
+            {% endunless %}
+            {% include 'onboarding-empty-collection' %}
+          {% else %}
+          <div class="grid__item">
+            <p>{{ 'collections.general.no_matches' | t }}</p>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% if settings.collection_custom_nav_list != blank or settings.collection_type_nav or settings.collection_vendor_nav or  settings.collection_tag_nav %}
+    <div class="grid__item large--one-quarter">
+      {% include 'collections-sidebar' %}
+    </div>
+    {% endif %}
+
+    {% if paginate.pages > 1 %}
+    <div class="grid__item one-whole">
+      <hr>
+      <div class="text-center">
+        {% include 'pagination-custom' %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endpaginate %}
+</div>

@@ -1,0 +1,9 @@
+{% assign form_action = product.metafields.charge_rabbit.subscribe_path %}
+{% assign form_method = 'get'%}
+{% assign form_class = "charge-rabbit-product" %}
+{% assign show_quantity = false %}
+{% assign include_customer_id = true %}
+
+{% include 'membership-product-callbacks' %}
+
+{% include "product" %}

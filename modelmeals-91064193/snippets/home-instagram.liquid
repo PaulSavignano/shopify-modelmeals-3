@@ -1,0 +1,25 @@
+{% unless settings.instagram_id == blank %}
+
+  <div class="homepage-instagram grid {{ settings.homepage_instagram_color }}">
+    {% unless settings.homepage_instagram_subtitle == '' %}
+      <h4 class="home__subtitle">{{ settings.homepage_instagram_subtitle}}</h4>
+    {% endunless %}
+    <div id="instafeed"></div>
+  </div>
+
+  <script>
+    $(document).ready(function(){
+      var userFeed = new Instafeed({
+        get: 'user',
+        userId: 'self',
+        accessToken: "{{ settings.instagram_id }}",
+        sortBy: 'most-recent',
+        resolution: 'standard_resolution',
+        limit: 6,
+        template: {%raw%}'<a href="{{link}}" target="_blank" class="grid__item large--one-sixth small--one-third medium--one-third"><span class="icon icon-instagram"></span><img src="{{image}}" /></a>'{%endraw%}
+      });
+      userFeed.run();
+    });
+  </script>
+  
+{% endunless %}

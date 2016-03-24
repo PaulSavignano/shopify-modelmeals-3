@@ -1,0 +1,26 @@
+{% unless settings.home_page_content == blank or settings.home_page_content.empty? %}
+  {% assign product = all_products[settings.home_product] %}
+
+  {% if product.template_suffix == "charge-rabbit" %}
+    {% assign form_action = product.metafields.charge_rabbit.subscribe_path %}
+    {% assign form_method = 'get'%}
+    {% assign form_class = "charge-rabbit-product" %}
+    {% assign show_quantity = false %}
+    {% assign include_customer_id = true %}
+
+    {% include 'membership-product-callbacks' %}
+  {% else %}
+    {% assign form_action = '/cart/add'%}
+    {% assign form_method = 'post'%}
+    {% assign form_id = "AddToCartForm" %}
+    {% assign show_quantity = settings.product_quantity %}
+    {% include 'product-callbacks' %}
+  {% endif %}
+
+  <div class="homepage-product {{ settings.homepage_product_color }}">
+    {% unless settings.homepage_product_subtitle == '' %}
+      <h4 class="home__subtitle">{{ settings.homepage_product_subtitle}}</h4>
+    {% endunless %}
+    {% include 'product' %}
+  </div>
+{% endunless %}

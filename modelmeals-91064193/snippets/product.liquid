@@ -1,0 +1,230 @@
+<!-- /snippets/product.liquid -->
+
+<div itemscope itemtype="http://schema.org/Product" class="product-page">
+  <div class="wrapper">
+
+    <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
+    <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
+    <meta itemprop="price" content="{{ product.price | money }}">
+
+    {% if settings.product_breadcrumbs %}
+      {% include 'breadcrumb' %}
+    {% endif %}
+
+    <div class="grid product-single">
+      <div class="grid__item large--two-thirds text-center product-single__wrapper">
+        <div class="product-single__photos" id="ProductPhoto">
+          {% for image in product.images %}
+            <div class="product-single__photo__wrapper">
+              <img src="{{ image.src | img_url: '1024x1024' }}" alt="{{ image.alt | escape }}" >
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="grid__item large--one-third" id="productInfo">
+        <div class="text-center">
+          <h5 class="product__price uppercase h5{% if product.compare_at_price > product.price %} on-sale{% endif %}">
+            <span class="money"><span id="ProductPrice">{{ product.price | money }}</span></span>
+            {% if product.compare_at_price > product.price %}
+              <p class="small compare-at em">
+              <span class="money"><span id="ComparePrice">{{ product.compare_at_price_max | money }}</span></span>
+              </p>
+            {% endif %}
+          </h5>
+
+
+          {% if settings.product_show_vendor and product.vendor %}
+            <p class="uppercase vendor__link">{{ product.vendor | link_to_vendor }}</p>
+          {% endif %}
+          <h2 itemprop="name">{{ product.title }}</h2>
+
+          {% comment %}
+            If the product description is over 1000 characters or contains an embed code, 
+            place the description in a full width container below the image and cart button.
+          {% endcomment %}
+            
+          {% assign description_position = settings.description_position %}
+
+          {% if description_position == 'auto' %}
+            {% if product.description.size > 1000 or product.description contains 'iframe' %}
+              {% assign description_position = 'below' %}
+              {% else %}
+              {% assign description_position = 'sidebar' %}
+            {% endif %}
+          {% endif %}
+
+          {% if description_position == 'sidebar' %}
+          <div class="product-description rte" itemprop="description">
+            {{ product.description }}
+          </div>
+          {% endif %}
+        </div>
+
+        <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+
+          {% comment %}
+            Get first variant, or deep linked one
+          {% endcomment %}
+          {% assign variant = product.selected_or_first_available_variant %}
+
+          <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+
+          <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
+
+          <form action="{{ form_action }}" method="{{form_method}}" enctype="multipart/form-data" id="{{form_id}}" class="{{form_class}}">
+            {% if include_customer_id %}
+              <input type="hidden" name="customer_id" value="{{customer.id}}"></input>
+            {% endif %}
+
+            <select name="id" id="productSelect" class="product-single__variants">
+              {% for variant in product.variants %}
+                {% if variant.available %}
+
+                  <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}" data-sku="{{ variant.sku }}">{{ variant.title }}</option>
+
+                {% else %}
+                  <option disabled="disabled">
+                    {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+                  </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+            {% if show_quantity %}
+            <div class="quantity-selector__wrapper text-center">
+              <label for="Quantity" class="quantity-selector uppercase">{{ 'products.product.quantity' | t }}</label>
+              <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector">
+            </div>
+            {% endif %}
+            <div class="add-to-cart__wrapper">
+              <button type="submit" name="add" id="AddToCart" class="btn btn--large btn--full btn--clear uppercase">
+                <span id="AddToCartText">{{ 'products.product.add_to_cart' | t }} </span>
+                <span class="unicode">&#x2022</span>
+                <span class="add-to-cart__price money"><span id="ButtonPrice">{{ product.price | money }}</span></span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {% if settings.product_social_enable %}
+          {% capture link %}{{ shop.url }}{{ product.url }}{% endcapture %}
+          {% capture title %}{{ product.title | url_param_escape }}{% endcapture %}
+          <div class="share text-center" data-permalink="{{ link }}">
+            {% if settings.share_enable_facebook %}
+              <a target="_blank" href="//www.facebook.com/sharer.php?u={{ link }}" class="share__link">
+                <span class="icon icon-facebook" aria-hidden="true"></span>
+                <span class="share__text">{{ 'general.share.facebook' | t }}</span>
+              </a>
+            {% endif %}
+            {% if settings.share_enable_twitter %}
+              <a target="_blank" href="//twitter.com/share?url={{ link }}&amp;text={{ shareTitle }}" class="share__link">
+                <span class="icon icon-twitter" aria-hidden="true"></span>
+                <span class="share__text">{{ 'general.share.twitter' | t }}</span>
+              </a>
+            {% endif %}
+            {% if settings.share_enable_pinterest %}
+              <a target="_blank" href="http://pinterest.com/pin/create/button/?url={{ link }}&amp;media={{ product.featured_image | product_img_url: '1024x1024' | prepend: 'http:' }}&amp;description={{ shareTitle }}" class="share__link">
+                <span class="icon icon-pinterest" aria-hidden="true"></span>
+                <span class="share__text">{{ 'general.share.pinterest' | t }}</span>
+              </a>
+            {% endif %}
+            {% if settings.share_enable_google %}
+              <a target="_blank" href="//plus.google.com/share?url={{ link }}" class="share__link">
+                <span class="icon icon-google" aria-hidden="true"></span>
+                <span class="share__text">{{ 'general.share.google' | t }}</span>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% comment %}
+          If the user is on a collection product page (ie with /collections/collection-handle/products/product-handle)
+          in the URL, we can show next/previous links to other products in the collection.
+        {% endcomment %}
+        {% if collection and settings.product_nav_enable %}
+          {% if collection.previous_product or collection.next_product %}
+            <p class="product__arrows">
+            {% if collection.previous_product %}
+              {% capture prev_url %}{{ collection.previous_product}}#content{% endcapture %}
+              <span class="left">
+                <a href="{{ prev_url }}" class="btn btn--clear btn--small uppercase" rel="prev">
+                  {{ 'products.general.previous_product_html' | t }}
+                </a>
+              </span>
+            {% endif %}
+
+            {% if collection.next_product %}
+              {% capture next_url %}{{ collection.next_product}}#content{% endcapture %}
+              <span class="right">
+                <a href="{{ next_url }}" class="btn btn--clear btn--small uppercase" rel="next">
+                  {{ 'products.general.next_product_html' | t }}
+                </a>
+              </span>
+            {% endif %}
+
+            </p>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% if description_position == 'below' %}
+<div class="wrapper">
+  <div class="product-description--below rte" itemprop="description">
+    {{ product.description }}
+  </div>
+</div>
+{% endif %}
+
+
+<div class="wrapper">
+  <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+</div>
+
+
+{% if settings.related_products_enable %}
+  {% include 'product-related-items' %}
+{% endif %}
+
+{% comment %}
+  To take advantage of a callback on the select dropdown, add option_selection.js
+  and customize the JS in timber.productPage as needed.
+
+  Currently, timber.productPage does the following:
+    - Hides your <select> tag from above
+    - Breaks out the product variants into separate product options, if more than one exists
+    - Generates a <select> tag for each product option
+    - Enables/disables elements based on variant availability
+
+  Callback notes:
+    - Keep the callback available to the global scope (window.selectCallback) so that advanced
+      addons can override it.
+      * E.g. multiple currencies http://docs.shopify.com/manual/configuration/store-customization/currencies-and-translations/currencies/how-to-toggle-between-two-currencies
+{% endcomment %}
+{{ 'option_selection.js' | shopify_asset_url | script_tag }}
+
+<script>
+  jQuery(function($) {
+    $('.product-single__photos').slick({
+      dots: true,
+      adaptiveHeight: true
+    });
+
+    new Shopify.OptionSelectors('productSelect', {
+      product: {{ product | json }},
+      onVariantSelected: selectCallback,
+      enableHistoryState: true
+    });
+
+    // Add label if only one product option and it isn't 'Title'. Could be 'Size'.
+    {% if product.options.size == 1 and product.options.first != 'Title' %}
+      $('.selector-wrapper:eq(0)').prepend('<label for="productSelect-option-0">{{ product.options.first | escape }}</label>');
+    {% endif %}
+
+    // Hide selectors if we only have 1 variant and its title contains 'Default'.
+    {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+      $('.selector-wrapper').hide();
+    {% endif %}
+  });
+</script>

@@ -1,0 +1,219 @@
+<!-- /templates/article.liquid -->
+
+{% assign number_of_comments = article.comments_count %}
+
+{% comment %}
+  If a comment was just submitted and it has no blank fields, we have an extra comment to count.
+{% endcomment %}
+{% if comment and comment.created_at %}
+  {% assign number_of_comments = article.comments_count | plus: 1 %}
+{% endif %}
+
+{% if article.image %}      
+  <div class="blog__article-image" style="background-image: url('{{ article.image | img_url: '2048x2048' }}');">
+  </div>
+{% endif %}
+
+<div class="wrapper page-margin">
+
+  <div class="grid">
+
+    <article class="grid__item{% if settings.blog_sidebar_enable %} large--two-thirds{% else %} large--two-thirds push--large--one-sixth{% endif %}" itemscope itemtype="http://schema.org/Article">
+      <div class="blog__article{% if article.image %} blog__article--over-image{% endif %}">
+        <header>
+          <h2 class="uppercase h2">{{ article.title }}</h2>
+          {% capture author %}<strong>{{ article.author }}</strong>{% endcapture %}
+          {% capture date %}<time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'month_day_year' }}</time>{% endcapture %}
+          <p class="accent">{{ 'blogs.article.author_on_date_html' | t: author: author, date: date }}</p>
+        </header>
+
+        <div class="blog__article__content rte" itemprop="articleBody">
+
+          {{ article.content }}
+        </div>
+
+        {% if settings.blog_show_tags %}
+          {% include 'tags-article' %}
+        {% endif %}
+        {% if settings.blog_social_enable %}
+          {% capture link %}{{ shop.url }}{{ article.url }}{% endcapture %}
+          {% capture title %}{{ article.title | url_param_escape }}{% endcapture %}
+          <div class="share text-center" data-permalink="{{ link }}">
+            {% if settings.share_enable_facebook %}
+              <a target="_blank" href="//www.facebook.com/sharer.php?u={{ link }}" class="share__link">
+                <span class="icon icon-facebook" aria-hidden="true"></span>
+                <span class="share__text">{{ 'general.share.facebook' | t }}</span>
+              </a>
+            {% endif %}
+            {% if settings.share_enable_twitter %}
+              <a target="_blank" href="//twitter.com/share?url={{ link }}&amp;text={{ shareTitle }}" class="share__link">
+                <span class="icon icon-twitter" aria-hidden="true"></span>
+                <span class="share__text">{{ 'general.share.twitter' | t }}</span>
+              </a>
+            {% endif %}
+            {% if settings.share_enable_pinterest %}
+              <a target="_blank" href="http://pinterest.com/pin/create/button/?url={{ link }}&amp;media={{ article.image | img_url: '1024x1024' | prepend: 'http:' }}&amp;description={{ shareTitle }}" class="share__link">
+                <span class="icon icon-pinterest" aria-hidden="true"></span>
+                <span class="share__text">{{ 'general.share.pinterest' | t }}</span>
+              </a>
+            {% endif %}
+            {% if settings.share_enable_google %}
+              <a target="_blank" href="//plus.google.com/share?url={{ link }}" class="share__link">
+                <span class="icon icon-google" aria-hidden="true"></span>
+                <span class="share__text">{{ 'general.share.google' | t }}</span>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+      {% if blog.next_article or blog.previous_article %}
+        <p class="clearfix">
+          {% if blog.previous_article %}
+            <span class="left">
+              <a href="{{ blog.previous_article }}" class="btn btn--secondary btn--small uppercase">
+                &larr; {{ 'blogs.article.older_post' | t }}
+              </a>
+            </span>
+          {% endif %}
+          {% if blog.next_article %}
+            <span class="right">
+              <a href="{{ blog.next_article }}" class="btn btn--secondary btn--small uppercase">
+                {{ 'blogs.article.newer_post' | t }} &rarr;
+              </a>
+            </span>
+          {% endif %}
+        </p>
+      {% endif %}
+
+
+      {% if blog.comments_enabled? %}
+        <hr class="hr--clear">
+
+        {% if article.comments_count > 0 %}
+        <p class="uppercase h4">{{ 'blogs.comments.comments_with_count' | t: count: number_of_comments }}</p>
+        {% endif %}
+
+        <hr class="hr--clear">
+
+        {% comment %}
+          Just like blog.liquid page, define how many comments should be on each page.
+        {% endcomment %}
+        {% paginate article.comments by 5 %}
+          {% comment %}
+            #Comments is required, it is used as an anchor link by Shopify.
+          {% endcomment %}
+          <div id="Comments">
+
+            {% if comment and comment.created_at %}
+              <p class="note form-success">
+                {% if blog.moderated? %}
+                  {{ 'blogs.comments.success_moderated' | t }}
+                {% else %}
+                  {{ 'blogs.comments.success' | t }}
+                {% endif %}
+              </p>
+            {% endif %}
+
+            {% if number_of_comments > 0 %}
+              <ul>
+                {% comment %}
+                  If a comment was just submitted with no blank field, show it.
+                {% endcomment %}
+                {% if comment and comment.created_at %}
+                  <li id="{{ comment.id }}" class="comment first{% if article.comments_count == 0 %} last{% endif %}">
+                    {% include 'comment' %}
+                  </li>
+                {% endif %}
+
+                {% comment %}
+                  Showing the rest of the comments.
+                {% endcomment %}
+                {% for comment in article.comments %}
+                  <li id="{{ comment.id }}" class="comment{% unless number_of_comments > article.comments_count %}{% if forloop.first %} first{% endif %}{% endunless %}{% if forloop.last %} last {% endif %}">
+                    {% include 'comment' %}
+                  </li>
+                {% endfor %}
+              </ul>
+
+              {% if paginate.pages > 1 %}
+                <hr class="hr--clear">
+                <div class="text-center">
+                  {% include 'pagination-custom' %}
+                </div>
+              {% endif %}
+
+              <hr class="hr--clear">
+
+            {% endif %}
+
+            {% comment %}
+              Comment submission form
+            {% endcomment %}
+            {% form 'new_comment', article %}
+
+              {% comment %}
+                #AddCommentTitle is used simply as an anchor link
+              {% endcomment %}
+              <p class="uppercase h4" id="AddCommentTitle">{{ 'blogs.comments.title' | t }}</p>
+
+              {{ form.errors | default_errors }}
+
+              <div class="grid">
+
+                <div class="grid__item large--one-half">
+                  <label for="CommentAuthor" class="label--hidden">{{ 'blogs.comments.name' | t }}</label>
+                  <input {% if form.errors contains "author" %} class="error"{% endif %} type="text" name="comment[author]" placeholder="{{ 'blogs.comments.name' | t }}" id="CommentAuthor" value="{{ form.author }}" autocapitalize="words">
+
+                  <label for="CommentEmail" class="label--hidden">{{ 'blogs.comments.email' | t }}</label>
+                  <input {% if form.errors contains "email" %} class="error"{% endif %} type="email" name="comment[email]" placeholder="{{ 'blogs.comments.email' | t }}" id="CommentEmail" value="{{ form.email }}" autocorrect="off" autocapitalize="off">
+                </div>
+
+                <div class="grid__item">
+                  <label for="CommentBody" class="label--hidden">{{ 'blogs.comments.message' | t }}</label>
+                  <textarea {% if form.errors contains "body" %} class="error"{% endif %} name="comment[body]" id="CommentBody" placeholder="{{ 'blogs.comments.message' | t }}">{{ form.body }}</textarea>
+                </div>
+
+              </div>
+
+              {% if blog.moderated? %}
+                <p>{{ 'blogs.comments.moderated' | t }}</p>
+              {% endif %}
+
+              <input type="submit" class="btn uppercase" value="{{ 'blogs.comments.post' | t }}">
+
+              {% comment %}
+                Assign variable to be used after timber.init() is run in theme.liquid
+              {% endcomment %}
+              {% if form.errors %}
+                {% assign newHash = 'AddCommentTitle' %}
+              {% endif %}
+
+              {% if form.posted_successfully? %}
+                {% assign newHash = 'Comments' %}
+              {% endif %}
+
+            {% endform %}
+
+          </div>
+        {% endpaginate %}
+      {% endif %}
+
+    </article>
+    {% if settings.blog_sidebar_enable %}
+    <div class="grid__item large--one-third blog__sidebar">
+      <h2 class="uppercase h4">{{ blog.title }}</h2>      
+      <a class="icon-fallback-text blog__rss" href="{{ blog.url }}.atom" title="{{ shop.name }} RSS" target="_blank">
+        <span class="icon icon-rss"></span>
+        <span class="fallback-text">RSS</span>
+      </a>
+      <hr class="hr--small">
+      {% if blog.all_tags != blank %}
+      <h5 class="uppercase h5">Tags</h2>
+        {% for tag in blog.all_tags %}
+          <a class="blog__tag" href="/blogs/{{ blog.handle }}/tagged/{{ tag | handleize }}">{{ tag }}</a>
+        {% endfor %}
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>

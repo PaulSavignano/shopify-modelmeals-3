@@ -1,0 +1,56 @@
+{% if settings.home_collection != blank %}
+  {% assign collection = collections[settings.home_collection] %}
+  {% assign count = collections[settings.home_collection].products_count %}
+  {% if collections[settings.home_collection].empty? %}
+    {% assign count = 0 %}
+  {% endif %}
+
+  {% case count %}
+    {% when 1 %}
+      {% assign grid_width_large = 'large--one-third push--large--one-third' %}
+      {% assign grid_width_medium = 'medium--one-half push--medium--one-quarter' %}
+      {% assign grid_width_small = 'small--one-whole' %}
+    {% when 2 %}
+      {% assign grid_width_large = 'large--one-half' %}
+      {% assign grid_width_medium = 'medium--one-half' %}
+      {% assign grid_width_small = 'small--one-half' %}
+    {% when 3 %}
+      {% assign grid_width_large = 'large--one-third' %}
+      {% assign grid_width_medium = 'medium--one-third' %}
+      {% assign grid_width_small = 'small--one-whole' %}
+    {% when 4 %}
+      {% assign grid_width_large = 'large--one-quarter' %}
+      {% assign grid_width_medium = 'medium--one-half' %}
+      {% assign grid_width_small = 'small--one-half' %}
+    {% when 5 %}
+      {% assign grid_width_large = 'large--one-fifth' %}
+      {% assign grid_width_medium = 'medium--one-third' %}
+      {% assign grid_width_small = 'small--one-half' %}
+    {% when 6 %}
+      {% assign grid_width_large = 'large--one-sixth' %}
+      {% assign grid_width_medium = 'medium--one-third' %}
+      {% assign grid_width_small = 'small--one-half' %}
+    {% else %}
+      {% assign grid_width_large = {{settings.global_grid_width_large}} %}
+      {% assign grid_width_medium = {{settings.global_grid_width_medium}} %}
+      {% assign grid_width_small = {{settings.global_grid_width_small}} %}
+  {% endcase %}
+
+  <div class="homepage-collection {{ settings.homepage_collection_color }}">
+    <div class="wrapper">
+      {% unless settings.homepage_collection_subtitle == '' %}
+        <h4 class="home__subtitle">{{ settings.homepage_collection_subtitle}}</h4>
+      {% endunless %}
+      <div class="grid-uniform">
+      {% if count == 0 %}
+        {{ 'theme-onboarding.css' | asset_url | stylesheet_tag }}
+        {% include 'onboarding-featured-products' %}
+      {% else %}
+        {% for product in collection.products  limit: 50 %}
+          {% include 'product-grid-item' %}
+        {% endfor %}
+      {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}

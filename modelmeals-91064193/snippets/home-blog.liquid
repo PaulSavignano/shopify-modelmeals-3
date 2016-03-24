@@ -1,0 +1,35 @@
+{% unless settings.homepage_blog == blank or settings.homepage_blog.empty? %}
+{% assign blog = blogs[settings.homepage_blog] %}
+<div class="homepage-page {{ settings.homepage_blog_color }}">
+  <div class="wrapper">
+    <div class="grid-uniform">
+        {% unless settings.homepage_blog_subtitle == '' %}
+          <div class="grid__item one-whole">
+            <h4 class="home__subtitle">{{ settings.homepage_blog_subtitle}}</h4>
+          </div>
+        {% endunless %}
+        <div class="large--five-sixths push--large--one-twelfth">
+          {% for article in blog.articles limit:2 %}
+            <div class="grid__item large--one-half">
+              <a class="blog__link" href="{{ article.url }}">
+                <div class="blog__article blog__article--card{% if article.image %} blog__article--image{% endif %}"{% if article.image %} style="background-image: url('{{ article.image | img_url: 'grande' }}');"{% endif %}>  
+                  <div class="rte blog__article__content equalHeightColumn">     
+                    <h3 class="uppercase h3 blog__article__title">{{ article.title }}</h3>
+                    {% unless article.image %}
+                        {% if article.excerpt == blank %}
+                          {{ article.content | strip_html | truncate: 200 }}
+                        {% else %}
+                          {{ article.excerpt | strip_html | truncate: 200 }}
+                        {% endif %}
+                    {% endunless %}
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endunless %}
+

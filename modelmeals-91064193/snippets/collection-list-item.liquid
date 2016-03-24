@@ -1,0 +1,33 @@
+<!-- /snippets/collection-list-item.liquid -->
+{% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+
+{% assign grid_width_large = {{settings.global_grid_width_large}} %}
+{% assign grid_width_medium = {{settings.global_grid_width_medium}} %}
+{% assign grid_width_small = {{settings.global_grid_width_small}} %}
+
+{% if grid_width_large == 'large--one-half' %}
+  {% assign product_count = 2 %}
+{% elsif grid_width_large == 'large--one-third' %}
+  {% assign product_count = 3 %}
+{% elsif grid_width_large == 'large--one-quarter' %}
+  {% assign product_count = 4 %}
+{% elsif grid_width_large == 'large--one-fifth' %}
+  {% assign product_count = 5 %}
+{% else %}
+  {% assign product_count = 6 %}
+{% endif %}
+
+<div class="collection-list-item">
+  <div class="section-header">
+    <p class="h3 section-header__left title">{{ collection_title }}</p>
+    <div class="section-header__right">
+      <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}" class="btn uppercase">{{ collection_title }} &rsaquo;</a>
+    </div>
+  </div>
+
+  <div class="grid-uniform">
+    {% for product in collection.products limit: product_count %}
+      {% include 'product-grid-item' %}
+    {% endfor %}
+  </div>
+</div>

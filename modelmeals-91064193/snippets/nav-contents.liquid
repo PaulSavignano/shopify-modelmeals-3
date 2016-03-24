@@ -1,0 +1,50 @@
+<div class="mobile-wrapper">
+  <div class="header-cart__wrapper">
+    <a href="/cart" class="CartToggle header-cart"></a>
+    <span class="header-cart__bubble cartCount{% if cart.item_count < 1 %} hidden-count{% endif %}"></span>
+  </div>
+  <div class="logo-wrapper {% if settings.logo_use_image %}logo-wrapper--image{% endif %}">
+    {% if template == 'index' %}
+      <h1 class="h4 header-logo" itemscope itemtype="http://schema.org/Organization">
+    {% else %}
+      <div class="h4 header-logo" itemscope itemtype="http://schema.org/Organization">
+    {% endif %}
+      {% if settings.logo_use_image %}
+        <a href="/" itemprop="url">
+          <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo" class="logo-image" onerror='this.style.display = "none"'/>
+        </a>
+      {% else %}
+        <a href="/" itemprop="url">{{ shop.name }}</a>
+      {% endif %}
+    {% if template == 'index' %}
+      </h1>
+    {% else %}
+      </div>
+    {% endif %}
+  </div>
+  <a href class="menuToggle header-hamburger"></a>
+</div>
+<div class="header-menu nav-wrapper">
+  {% comment %}
+    List out your main-menu linklist (default)
+
+    More info on linklists:
+      - http://docs.shopify.com/themes/liquid-variables/linklists
+  {% endcomment %}
+  <ul class="main-menu accessibleNav">
+    {% if settings.main_menu_linklist %}
+      {% assign main_menu_linklist = settings.main_menu_linklist %}
+    {% else %}
+      {% assign main_menu_linklist = 'main-menu' %}
+    {% endif %}
+    {% for link in linklists[main_menu_linklist].links %}
+      {% include 'nav-item' %}    
+    {% endfor %}
+    <li class="cart-text-link">
+      <a href="/cart" class="CartToggle">
+        {{ 'layout.cart.title' | t }} 
+        <span class="cartCost {% if cart.item_count < 1 %} hidden-count {% endif %}">(<span class="money">{{ cart.total_price | money }}</span>)</span>
+      </a>
+    </li>
+  </ul>
+</div>

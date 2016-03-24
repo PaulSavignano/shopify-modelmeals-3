@@ -1,0 +1,556 @@
+<style>
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {
+    vertical-align: middle;
+    border-right:0;
+    border-left: 0;
+}
+.caption {
+  margin-top: -15px;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.caption.show {
+  opacity: 1;
+}
+#main-dish-table {border-top: none}
+.display-qty {font-size: 16px}
+.table-inputs {text-align: right}
+input[type="number"], select {display: inline;}
+a {color: black}
+.table-img { width: 80px }
+.action-bar { margin: 15px 0; }
+.action-bar.top { margin: 30px 0 0; }
+.action-bar h1 { margin:0; padding: 0; line-height:1 }
+.left { float: left; }
+.right { float: right; }
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }
+.quantity { text-align: center; width: 60px !important; margin: 0 !important; }
+.modal-dialog {}
+.thumbnail {margin-bottom:6px;}
+.carousel-control.left,.carousel-control.right{
+  background-image:none;
+  margin-top:10%;
+  width:5%;
+}
+</style>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal-gallery" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button class="close" type="button" data-dismiss="modal">×</button>
+          <h3 class="modal-title"></h3>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+          <button class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal End -->
+
+
+
+<!-- Table for ordering -->
+{% paginate collection.products by 100 %}
+
+
+
+  <!-- Package Options -->
+{% assign collection1 = collections.package-options %}
+{% if collection1.products_count > 0 %}
+  <table class="table">
+    <caption><h1 class="left">{{ collection1.title }}</h1></caption>
+    {% for product in collection1.products %}
+      {% if product.available %}
+        {% for variant in product.variants %}
+          {% if variant.available %}
+            <tr>
+              {% if product.featured_image %}
+                <td class="table-img">
+                  <a href="#image{{ product.id }}">
+                    <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ collection1.id }}"/>
+                  </a>
+                </td>
+              {% endif %}
+              <td colspan="{% if product.featured_image %}1{% else %}2{% endif %}">
+                <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
+                 {{ product.title }}{% unless variant.title contains 'Default' %} - {{ variant.title }}{% endunless %}{% unless variant.sku == '' %} - {{ variant.sku }}{% endunless %}
+                 {% if variant.price > 0 %}&nbsp;{{ variant.price | money }}{% endif %}
+                </a>
+              </td>
+              <td class="table-inputs">
+                <input onfocus="this.select()" class="quantity field package-qty" id="{{ product.title }}" data-id="{{ variant.id }}" min="0" type="number" value="" tabindex="1"/>
+              </td>
+            </tr>
+            <!-- Images for Modal -->
+            <div class="hidden" id="img-repo{{ collection1.id }}" name="{{ product.id }}">
+              {% for image in product.images %}
+                <div class="item" id="image{{ product.id }}">
+                  <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
+                </div>
+              {% endfor %}
+            </div>
+            <!-- Images for Modal End -->
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </table>
+{% else %}
+  <p>There are no products in this view.</p>
+{% endif %}
+<!-- Package Options End -->
+
+
+
+
+<!-- Main Dish Options -->
+{% assign collection2 = collections.main-dish-options %}
+{% if collection2.products_count > 0 %}
+<table class="table">
+  <caption><h1 class="left">{{ collection2.title }}</h1></caption>
+  <caption class="caption hidden" id="caption1"><h4 class="left" id="display-main-qty"></h4></caption>
+  {% for product in collection2.products %}
+    {% if product.available %}
+      {% for variant in product.variants %}
+        {% if variant.available %}
+          <tr>
+            {% if product.featured_image %}
+              <td class="table-img">
+                <a href="#image{{ product.id }}">
+                  <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ collection2.id }}"/>
+                </a>
+              </td>
+            {% endif %}
+            <td colspan="{% if product.featured_image %}1{% else %}2{% endif %}">
+              <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
+               {{ product.title }}{% unless variant.title contains 'Default' %} - {{ variant.title }}{% endunless %}{% unless variant.sku == '' %} - {{ variant.sku }}{% endunless %}
+               {% if variant.price > 0 %}&nbsp;{{ variant.price | money }}{% endif %}
+              </a>
+            </td>
+            <td class="table-inputs">
+              <input onfocus="this.select()" class="quantity field package main-dish-qty" id="{{ product.title }}" data-id="{{ variant.id }}" min="0" type="number" value="" tabindex="1"/>
+            </td>
+          </tr>
+          <!-- Images for Modal -->
+          <div class="hidden" id="img-repo{{ collection2.id }}" name="{{ product.id }}">
+            {% for image in product.images %}
+              <div class="item" id="image{{ product.id }}">
+                <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
+              </div>
+            {% endfor %}
+          </div>
+          <!-- Images for Modal End -->
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+</table>
+{% else %}
+<p>There are no products in this view.</p>
+{% endif %}
+<!-- Main Dish Options End -->
+
+
+
+
+<!-- Side Dish Options -->
+{% assign collection3 = collections.side-dish-options %}
+{% if collection3.products_count > 0 %}
+<table class="table">
+  <caption><h1 class="left">{{ collection3.title }}</h1></caption>
+  <caption class="caption hidden" id="caption2"><h4 class="left" id="display-side-qty"></h4></caption>
+  {% for product in collection3.products %}
+    {% if product.available %}
+      {% for variant in product.variants %}
+        {% if variant.available %}
+          <tr>
+            {% if product.featured_image %}
+              <td class="table-img">
+                <a href="#image{{ product.id }}">
+                  <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ collection3.id }}"/>
+                </a>
+              </td>
+            {% endif %}
+            <td colspan="{% if product.featured_image %}1{% else %}2{% endif %}">
+              <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
+               {{ product.title }}{% unless variant.title contains 'Default' %} - {{ variant.title }}{% endunless %}{% unless variant.sku == '' %} - {{ variant.sku }}{% endunless %}
+               {% if variant.price > 0 %}&nbsp;{{ variant.price | money }}{% endif %}
+              </a>
+            </td>
+            <td class="table-inputs">
+              <input onfocus="this.select()" class="quantity field package side-dish-qty" id="{{ product.title }}" data-id="{{ variant.id }}" min="0" type="number" value="" tabindex="1"/>
+            </td>
+          </tr>
+          <!-- Images for Modal -->
+          <div class="hidden" id="img-repo{{ collection3.id }}" name="{{ product.id }}">
+            {% for image in product.images %}
+              <div class="item" id="image{{ product.id }}">
+                <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
+              </div>
+            {% endfor %}
+          </div>
+          <!-- Images for Modal End -->
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+</table>
+{% else %}
+<p>There are no products in this view.</p>
+{% endif %}
+<!-- Side Dish Options End -->
+
+
+
+<!-- Add On Options -->
+{% assign collection4 = collections.add-on-options %}
+{% if collection4.products_count > 0 %}
+<table class="table">
+  <caption><h1 class="left">{{ collection4.title }}</h1></caption>
+  {% for product in collection4.products %}
+    {% if product.available %}
+      {% for variant in product.variants %}
+        {% if variant.available %}
+          <tr>
+            {% if product.featured_image %}
+              <td class="table-img">
+                <a href="#image{{ product.id }}">
+                  <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ collection4.id }}"/>
+                </a>
+              </td>
+            {% endif %}
+            <td colspan="{% if product.featured_image %}1{% else %}2{% endif %}">
+              <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
+               {{ product.title }}{% unless variant.title contains 'Default' %} - {{ variant.title }}{% endunless %}{% unless variant.sku == '' %} - {{ variant.sku }}{% endunless %}
+               {% if variant.price > 0 %}&nbsp;{{ variant.price | money }}{% endif %}
+              </a>
+            </td>
+            <td class="table-inputs">
+              <input onfocus="this.select()" class="quantity field" id="{{ product.title }}" data-id="{{ variant.id }}" min="0" type="number" value="" tabindex="1"/>
+            </td>
+          </tr>
+          <!-- Images for Modal -->
+          <div class="hidden" id="img-repo{{ collection4.id }}" name="{{ product.id }}">
+            {% for image in product.images %}
+              <div class="item" id="image{{ product.id }}">
+                <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
+              </div>
+            {% endfor %}
+          </div>
+          <!-- Images for Modal End -->
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+</table>
+{% else %}
+<p>There are no products in this view.</p>
+{% endif %}
+<!-- Add On Options End -->
+
+<div class="action-bar clearfix">
+  <input class="action-button submit button btn right add-to-cart-order-form" type="button" value="Add to the cart" disabled/>
+</div>
+{% endpaginate %}
+
+
+
+
+
+
+
+
+<script>
+"use strict";
+//  NodeList iteration not support by Chrome and Safari
+NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
+document.addEventListener("DOMContentLoaded", function(event) {
+let package8Max = 4;
+let package16Max = 8;
+let totalProductSelections;
+let collection1Remaining;
+let collection2Remaining;
+let totalRemaining;
+let totalPackageQty;
+let dishSelectionMax1;
+let dishSelectionMax2;
+let packageQty1 = 0;
+let packageQty2 = 0;
+// Display Quantities
+function display() {
+  // Get total package quantities
+  let packageCollection = document.querySelectorAll(".package-qty");
+  for (let packageProduct of packageCollection) {
+    if (packageProduct.id === "16-Dish Package") {
+      if (packageProduct.value === '') {
+        packageQty1 = 0;
+        dishSelectionMax1 = 0;
+      } else {
+        packageQty1 = parseInt(packageProduct.value, 10)
+        dishSelectionMax1 = packageQty1 * package16Max;
+      }
+    }
+    if (packageProduct.id === "8-Dish Package") {
+      if (packageProduct.value === '') {
+        packageQty2 = 0;
+        dishSelectionMax2 = 0;
+      } else {
+        packageQty2 = parseInt(packageProduct.value, 10)
+        dishSelectionMax2 = packageQty2 * package8Max;
+      }
+    }
+  }
+  // Get total packages inputed
+  totalPackageQty = packageQty1 + packageQty2;
+  // Get total product selection available
+  totalProductSelections = dishSelectionMax1 + dishSelectionMax2;
+  // Set product max for Main Dishes
+  let productInputs = document.querySelectorAll(".package");
+  for (let input of productInputs) {
+    if (input.classList.contains('main-dish-qty')) {
+      input.setAttribute("max", 2 * totalPackageQty);
+    }
+  	if (input.classList.contains('side-dish-qty')) {
+      input.setAttribute("max", totalProductSelections);
+    }
+  }
+  // Find Product Collection1 Quantities
+  let productCollection1 = document.querySelectorAll(".main-dish-qty");
+  let collection1Selected = 0;
+  for (let product of productCollection1) {
+    if (product.value !== '') {
+      collection1Selected += parseInt(product.value,10);
+    }
+  }
+  // Find Product Collection2 Quantities
+  let productCollection2 = document.querySelectorAll(".side-dish-qty");
+  let collection2Selected = 0;
+  for (let product of productCollection2) {
+    if (product.value !== '') {
+      collection2Selected += parseInt(product.value,10);
+    }
+  }
+  function displaySelected(collectionRemaining, display, caption, collectionSelected) {
+    if (collectionRemaining > 0) {
+      caption.classList.remove("hidden");
+      caption.classList.add("show");
+      if (display.id === 'display-main-qty') {
+        display.innerHTML = "Choose " + collectionRemaining + " (max " + 2 * totalPackageQty + " of each main dish)";
+      } else {
+        display.innerHTML = "Choose " + collectionRemaining;
+      }
+      display.style.color = 'black'
+    } else if (collectionSelected > 0) {
+      if (display.id === 'display-main-qty') {
+        display.innerHTML = "You've choosen " + collectionSelected + ", you're ready for your side dishes.";
+      } else {
+        display.innerHTML = "You've choosen " + collectionSelected + ", you're ready for any add on options.";
+      }
+      display.style.color = 'green'
+    } else {
+      caption.classList.add("hidden");
+      caption.classList.remove("show");
+      display.innerHTML = "";
+      console.log('There are no ' + collectionSelected);
+    }
+  }
+  // Display Selected for Product Collection1
+  let caption1 = document.getElementById('caption1');
+  let display1 = document.getElementById('display-main-qty');
+  collection1Remaining = totalProductSelections - collection1Selected;
+  displaySelected(collection1Remaining, display1, caption1, collection1Selected);
+  // Display Selected for Product Collection2
+  let caption2 = document.getElementById('caption2');
+  let display2 = document.getElementById('display-side-qty');
+  collection2Remaining = totalProductSelections - collection2Selected;
+  displaySelected(collection2Remaining, display2, caption2, collection2Selected);
+  // Enable add to cart button
+  totalRemaining = collection1Remaining + collection2Remaining;
+  let addToCartBtn = document.querySelectorAll(".action-button");
+  for (let btn of addToCartBtn) {
+    if (totalRemaining === 0 && totalPackageQty > 0) {
+      btn.removeAttribute('disabled');
+    } else {
+      btn.setAttribute('disabled', 'disabled');
+    }
+  }
+  // Disable product collection1 empty inputs if max
+  disableInputs(productCollection1, collection1Remaining);
+  disableInputs(productCollection2, collection2Remaining);
+}
+// Disable product collection1 empty inputs if max
+function disableInputs(inputsClass, collectionRemaining) {
+  let collectionInputs = inputsClass;
+  for (let input of collectionInputs) {
+    if (collectionRemaining === 0 && input.value === "") {
+      input.disabled = "true";
+    }
+    if (collectionRemaining === 0 && input.value !== "") {
+      input.max = "1";
+    }
+    if (collectionRemaining > 0) {
+      input.removeAttribute('disabled');
+    }
+  }
+}
+// On change functions
+function onChange() {
+  // Clear 0's from form
+  if (this.value === '0') {
+    this.value = '';
+  }
+  // Set product max
+  let productInputs = document.querySelectorAll(".package");
+  for (let input of productInputs) {
+    input.setAttribute("max", 2 * totalPackageQty);
+  }
+  // Disable product collection empty inputs if max
+  let collection1Inputs = document.querySelectorAll(".main-dish-qty");
+  let collection2Inputs = document.querySelectorAll(".side-dish-qty");
+  disableInputs(collection1Inputs, collection1Remaining);
+  disableInputs(collection2Inputs, collection2Remaining);
+  // Clear inputs if package quantity is reduced
+  if (this.classList.contains('package-qty')) {
+    if (this.getAttribute('lastvalue') === this.value) {
+      this.setAttribute('lastvalue', this.value);
+    } else {
+      console.log(this.value < this.getAttribute('lastvalue') ? 'decrement' : 'increment');
+      if (this.value < this.getAttribute('lastvalue')) {
+        let inputs = document.querySelectorAll(".package");
+        for (let input of inputs) {
+          input.value = '';
+          input.setAttribute("max",2);
+          input.removeAttribute('disabled');
+        }
+      }
+      if (this.value === '') {
+        this.setAttribute('lastvalue', 0);
+      } else {
+        this.setAttribute('lastvalue', this.value);
+      }
+    }
+  }
+  display();
+}
+  display();
+// Listen for click on inputs
+let inputs = document.querySelectorAll(".quantity");
+for (let i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('click', onChange, false);
+  }
+});
+</script>
+
+<!-- Modal Carousel Script -->
+<script>
+  /* activate the carousel */
+  $("#modal-carousel").carousel({interval:false});
+  /* change modal title when slide changes */
+  $("#modal-carousel").on("slid.bs.carousel", function () {
+    $(".modal-title").html($(this).find(".active img").attr("title"));
+  })
+/* click an image */
+$(".modal-img").click(function() {
+  var collection = this.dataset.collection;
+  var top_level_div = document.getElementById('img-repo' + collection);
+  var count = top_level_div.getElementsByTagName('div').length;
+    console.log(count);
+  var body = $(".modal-body");
+  var title = $(".modal-title");
+  body.empty();
+  title.empty();
+  var addCarousel = '';
+  if (count > 1) {
+    addCarousel = $('<div id="modal-carousel" class="carousel">' +
+                      '<div class="carousel-inner"></div>' +
+                        '<a class="carousel-control left" href="#modal-carousel" data-slide="prev">' +
+                          '<i class="glyphicon glyphicon-chevron-left"></i>' +
+                        '</a>' +
+                        '<a class="carousel-control right" href="#modal-carousel" data-slide="next">' +
+                          '<i class="glyphicon glyphicon-chevron-right"></i>' +
+                        '</a>' +
+                      '</div>');
+  } else {
+    addCarousel = $('<div id="modal-carousel" class="carousel">' +
+                      '<div class="carousel-inner"></div>' +
+                      '</div>');
+  }
+  body.append(addCarousel);
+  var content = $(".carousel-inner");
+  var id = this.id;
+  var repo = $("#img-repo" + collection + " .item");
+  var repoCopy = repo.filter("#" + id).clone();
+  var active = repoCopy.first();
+  active.addClass("active");
+  title.html(active.find("img").attr("title"));
+  content.append(repoCopy);
+  $("#modal-gallery").modal("show");
+});
+/* Click a product title */
+$(".modal-description").click(function(){
+    $(".modal-title").empty;
+    $(".modal-body").empty;
+    var title = $(this).data('title');
+    var description = $(this).data('description');
+    $(".modal-title").html(title);
+    $(".modal-body").html(description);
+    $("#modal-gallery").modal("show");
+});
+</script>
+
+
+
+<script>
+Shopify.itemsToAdd = [];
+Shopify.addItemstoTheCart = function() {
+  if (Shopify.itemsToAdd.length) {
+    var item = Shopify.itemsToAdd.pop();
+    $.ajax({
+      url: '/cart/add',
+      dataType: 'json',
+      type: 'post',
+      data: item,
+      success: Shopify.addItemstoTheCart,
+      error: Shopify.addItemstoTheCart
+    });
+  } else {
+    window.location.href = '/cart';
+  }
+}
+jQuery(function($) {
+  $('table .quantity:first').focus();
+  $('[max]').change(function() {
+    var max = parseInt($(this).attr('max'), 10);
+    var value = parseInt($(this).val(), 10) || 0;
+    if (value > max) {
+      alert('We only have ' + max + ' of this item in stock');
+      $(this).val(max);
+    }
+  });
+  $('.add-to-cart-order-form').click(function() {
+    // Resetting.
+    Shopify.itemsToAdd = [];
+    $('.quantity').each(function() {
+      var quantity = parseInt($(this).val(), 10);
+      if (quantity) {
+        Shopify.itemsToAdd.push( { id: $(this).attr('data-id'), quantity: quantity } );
+      }
+    });
+    if (Shopify.itemsToAdd.length) {
+      Shopify.addItemstoTheCart();
+    }
+    else {
+      alert('All quantities are set to zero.');
+      $('.add-to-cart-order-form').removeAttr('disabled').removeClass('disabled');
+    }
+  });
+});
+</script>

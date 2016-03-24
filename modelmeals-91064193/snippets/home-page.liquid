@@ -1,0 +1,13 @@
+{% unless settings.home_page_content == blank or settings.home_page_content.empty? %}
+{% assign page = pages[settings.home_page_content] %}
+<div class="homepage-page {{ settings.homepage_page_color }}">
+  <div class="wrapper">
+    <div class="grid">
+      <div class="grid__item large--five-sixths push--large--one-twelfth">
+        <h4 class="home__subtitle">{{ page.title }}</h4>
+        <div class="rte homepage-page__content">{{ page.content }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endunless %}

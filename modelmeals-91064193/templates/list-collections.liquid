@@ -1,0 +1,8 @@
+<!-- /templates/list-collections.liquid -->
+<div class="wrapper page-margin">
+  {% for collection in collections %}
+    {% unless collection.handle == 'frontpage' %}
+      {% include 'collection-list-item' %}
+    {% endunless %}
+  {% endfor %}
+</div>

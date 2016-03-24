@@ -1,0 +1,29 @@
+<script>
+  var chargeRabbitOptions = {};
+  {% for variant in product.variants %}
+    chargeRabbitOptions[{{ variant.id }}] = {};
+    {% if variant.metafields.charge_rabbit.amount %}
+      chargeRabbitOptions[{{ variant.id }}]['amount'] = {{ variant.metafields.charge_rabbit.amount }};
+      chargeRabbitOptions[{{ variant.id }}]['interval'] = '/{{ variant.metafields.charge_rabbit.interval }}';
+    {% else %}
+      chargeRabbitOptions[{{ variant.id }}]['amount'] = 0;
+      chargeRabbitOptions[{{ variant.id }}]['interval'] = "/month";
+    {% endif %}
+  {% endfor %}
+
+  var chargeRabbitFields = function(variant){
+    variantMetafields = chargeRabbitOptions[variant.id];
+    variant = $.extend(variant, variantMetafields);
+    return variant;
+  }
+
+  var selectCallback = function(variant, selector) {
+    timber.productPage({
+      money_format: "{{ shop.money_format }}",
+      variant: variant,
+      selector: selector,
+      addToCartText: "{{ 'products.product.join_membership' | t }}",
+      membershipProduct: true
+    });
+  };
+</script>

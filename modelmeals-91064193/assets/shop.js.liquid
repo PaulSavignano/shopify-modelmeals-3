@@ -1,0 +1,478 @@
+// Helper functions
+function replaceUrlParam(url, paramName, paramValue) {
+  var pattern = new RegExp('('+paramName+'=).*?(&|$)'),
+      newUrl = url;
+  if (url.search(pattern) >= 0) {
+    newUrl = url.replace(pattern,'$1' + paramValue + '$2');
+  } else {
+    newUrl = newUrl + (newUrl.indexOf('?')>0 ? '&' : '?') + paramName + '=' + paramValue;
+  }
+  return newUrl;
+}
+//  Callback for image loading based on Paul Irish method
+$.fn.imagesLoaded = function(callback, fireOne) {
+var
+  args = arguments,
+  elems = this.filter('img'),
+  elemsLen = elems.length - 1;
+elems
+  .bind('load', function(e) {
+      if (fireOne) {
+          !elemsLen-- && callback.call(elems, e);
+      } else {
+          callback.call(this, e);
+      }
+  }).each(function() {
+    // cached images don't fire load sometimes, so we reset src.
+    if (this.complete || this.complete === undefined){
+        this.src = this.src;
+    }
+  });
+}
+
+// Timber functions
+window.timber = window.timber || {};
+
+timber.cacheSelectors = function () {
+  timber.cache = {
+    // General
+    $html                    : $('html'),
+    $body                    : $('body'),
+
+    // Navigation
+    $navigation              : $('.accessibleNav'),
+
+    // Collection Pages
+    $changeView              : $('.change-view'),
+
+    // Product Page
+    $productImage            : $('#ProductPhotoImg'),
+    $thumbImages             : $('#ProductThumbs').find('a.product-single__thumbnail'),
+
+    // Customer Pages
+    $recoverPasswordLink     : $('#RecoverPassword'),
+    $hideRecoverPasswordLink : $('#HideRecoverPasswordLink'),
+    $recoverPasswordForm     : $('#RecoverPasswordForm'),
+    $customerLoginForm       : $('#CustomerLoginForm'),
+    $passwordResetSuccess    : $('#ResetSuccess')
+  }
+};
+
+timber.init = function () {
+  if(typeof(FastClick) !== 'undefined'){
+    FastClick.attach(document.body);
+  }
+  timber.cacheSelectors();
+  timber.accessibleNav();
+  timber.responsiveVideos();
+  timber.collectionViews();
+  timber.loginForms();
+};
+
+
+timber.accessibleNav = function () {
+  var $nav = timber.cache.$navigation,
+      $allLinks = $nav.find('a'),
+      $topLevel = $nav.children('li').find('a'),
+      $parents = $nav.find('.site-nav--has-dropdown'),
+      $subMenuLinks = $nav.find('.site-nav__dropdown').find('a'),
+      activeClass = 'nav-hover',
+      focusClass = 'nav-focus';
+
+  // Mouseenter
+  $parents.on('mouseenter touchstart', function(evt) {
+    var $el = $(this);
+
+    if (!$el.hasClass(activeClass)) {
+      evt.preventDefault();
+    }
+
+    showDropdown($el);
+  });
+
+  // Mouseout
+  $parents.on('mouseleave', function() {
+    hideDropdown($(this));
+  });
+
+  $subMenuLinks.on('touchstart', function(evt) {
+    // Prevent touchstart on body from firing instead of link
+    evt.stopImmediatePropagation();
+  });
+
+  $allLinks.focus(function() {
+    handleFocus($(this));
+  });
+
+  $allLinks.blur(function() {
+    removeFocus($topLevel);
+  });
+
+  // accessibleNav private methods
+  function handleFocus ($el) {
+    var $subMenu = $el.next('ul'),
+        hasSubMenu = $subMenu.hasClass('sub-nav') ? true : false,
+        isSubItem = $('.site-nav__dropdown').has($el).length,
+        $newFocus = null;
+
+    // Add focus class for top level items, or keep menu shown
+    if (!isSubItem) {
+      removeFocus($topLevel);
+      addFocus($el);
+    } else {
+      $newFocus = $el.closest('.site-nav--has-dropdown').find('a');
+      addFocus($newFocus);
+    }
+  }
+
+  function showDropdown ($el) {
+    $el.addClass(activeClass);
+
+    setTimeout(function() {
+      timber.cache.$body.on('touchstart', function() {
+        hideDropdown($el);
+      });
+    }, 250);
+  }
+
+  function hideDropdown ($el) {
+    $el.removeClass(activeClass);
+    timber.cache.$body.off('touchstart');
+  }
+
+  function addFocus ($el) {
+    $el.addClass(focusClass);
+  }
+
+  function removeFocus ($el) {
+    $el.removeClass(focusClass);
+  }
+};
+
+timber.getHash = function () {
+  return window.location.hash;
+};
+
+timber.updateHash = function (hash) {
+  window.location.hash = '#' + hash;
+  $('#' + hash).attr('tabindex', -1).focus();
+};
+
+timber.productPage = function (options) {
+  var moneyFormat = options.money_format,
+      variant = options.variant,
+      selector = options.selector,
+      addToCartText = options.addToCartText || {{ 'products.product.add_to_cart' | t | json }},
+      membershipProduct = options.membershipProduct || false;
+
+  // Selectors
+  var $productImage = $('#ProductPhotoImg'),
+      $addToCart = $('#AddToCart'),
+      $productPrice = $('#ProductPrice'),
+      $buttonPrice = $('#ButtonPrice'),
+      $comparePrice = $('#ComparePrice'),
+      $quantityElements = $('.quantity-selector, label + .js-qty'),
+      $addToCartText = $('#AddToCartText'),
+      $quantityInput = $quantityElements.find('input');
+
+  if (variant) {
+
+    // Update variant image, if one is set
+    if (variant.featured_image) {
+      var newImg = variant.featured_image;
+      $('.product-single__photos').slick('slickGoTo', newImg.position - 1);
+    }
+
+    // Select a valid variant if available
+    if (variant.available) {
+      // Available, enable the submit button, change text, show quantity elements
+      $addToCart.removeClass('disabled').prop('disabled', false);
+      $addToCartText.html(addToCartText);
+      $quantityElements.show();
+    } else {
+      // Sold out, disable the submit button, change text, hide quantity elements
+      $addToCart.addClass('disabled').prop('disabled', true);
+      $addToCartText.html({{ 'products.product.sold_out' | t | json }});
+      $quantityElements.hide();
+    }
+
+    // Regardless of stock, update the product price
+    if(membershipProduct) {
+      $productPrice.html("<span class='money'>" + Shopify.formatMoney(chargeRabbitFields(variant).amount, moneyFormat) + "</span>" + chargeRabbitFields(variant).interval );
+      $buttonPrice.html("<span class='money'>" + Shopify.formatMoney(chargeRabbitFields(variant).amount, moneyFormat) + "</span>" + chargeRabbitFields(variant).interval );
+    }
+    else {
+      $productPrice.html("<span class='money'>" + Shopify.formatMoney(variant.price, moneyFormat) + "</span>");
+
+      var quantity,
+      quantityLabel = "";
+      if($quantityInput.length)
+        quantity = $quantityInput.val();
+      else
+        quantity = 1;
+
+      if(quantity > 1)
+        quantityLabel = "(" + quantity + ")";
+
+      $buttonPrice.attr('data-item-price', variant.price);
+      $buttonPrice.attr('data-item-quantity', quantity);
+      $buttonPrice.html("<span class='money'>" + Shopify.formatMoney(variant.price * quantity, moneyFormat) + "</span>&nbsp;" + quantityLabel);
+    }
+
+    // Also update and show the product's compare price if necessary
+    if (variant.compare_at_price > variant.price) {
+      $comparePrice
+        .html(Shopify.formatMoney(variant.compare_at_price, moneyFormat))
+        .show();
+    } else {
+      $comparePrice.hide();
+    }
+
+  } else {
+    // The variant doesn't exist, disable submit button.
+    // This may be an error or notice that a specific variant is not available.
+    // To only show available variants, implement linked product options:
+    //   - http://docs.shopify.com/manual/configuration/store-customization/advanced-navigation/linked-product-options
+    $addToCart.addClass('disabled').prop('disabled', true);
+    $addToCartText.html({{ 'products.product.unavailable' | t | json }});
+    $quantityElements.hide();
+  }
+};
+
+timber.switchZoom = function (src, imgObject, el) {
+  // Make sure element is a jquery object
+  var $el = $(el);
+  $el.attr('data-zoom-image', src);
+};
+
+timber.responsiveVideos = function () {
+  $('iframe[src*="youtube.com/embed"]').wrap('<div class="video-wrapper"></div>');
+  $('iframe[src*="player.vimeo"]').wrap('<div class="video-wrapper"></div>');
+};
+
+timber.collectionViews = function () {
+  if (timber.cache.$changeView.length) {
+    timber.cache.$changeView.on('click', function() {
+      var view = $(this).data('view'),
+          url = document.URL,
+          hasParams = url.indexOf('?') > -1;
+
+      if (hasParams) {
+        window.location = replaceUrlParam(url, 'view', view);
+      } else {
+        window.location = url + '?view=' + view;
+      }
+    });
+  }
+};
+
+timber.loginForms = function() {
+  function showRecoverPasswordForm() {
+    timber.cache.$recoverPasswordForm.show();
+    timber.cache.$customerLoginForm.hide();
+  }
+
+  function hideRecoverPasswordForm() {
+    timber.cache.$recoverPasswordForm.hide();
+    timber.cache.$customerLoginForm.show();
+  }
+
+  timber.cache.$recoverPasswordLink.on('click', function(evt) {
+    evt.preventDefault();
+    showRecoverPasswordForm();
+  });
+
+  timber.cache.$hideRecoverPasswordLink.on('click', function(evt) {
+    evt.preventDefault();
+    hideRecoverPasswordForm();
+  });
+
+  // Allow deep linking to recover password form
+  if (timber.getHash() == '#recover') {
+    showRecoverPasswordForm();
+  }
+};
+
+timber.resetPasswordSuccess = function() {
+  timber.cache.$passwordResetSuccess.show();
+};
+
+// Initialize Timber's JS on docready
+$(timber.init);
+
+
+
+/*============================================================================
+    Pipeline Functions  )`-....._,.-'``'-.,_,.='``'-.,
+==============================================================================*/
+
+window.pipeline = window.pipeline || {};
+
+pipeline.init = function () {
+  pipeline.equalHeight();
+  pipeline.navClick();
+  pipeline.delayNav();
+  pipeline.smoothScroll();
+  pipeline.videoSwap();
+  pipeline.detectNav();
+  pipeline.tabletMenu();
+  {% if settings.homepage_hero_height == '300px' %}
+    pipeline.sizeHero();
+  {% endif %}
+};
+
+pipeline.equalHeight = function() {
+  var $columns = $('.equalHeightColumn');
+  $columns.height('initial');
+  var height = 0;
+  $columns.each(function () {
+    if ($(this).height() > height) {
+      height = $(this).height();
+    }
+  });
+  $columns.height(height);
+};
+
+pipeline.navClick = function() {
+  $('.nav--mobile .accessibleNav .grandparent > a.nav-carat, .nav--mobile .accessibleNav .parent > a.nav-carat').on('click', function(event){
+    event.preventDefault();
+    $(this).closest('li').toggleClass('main-menu--expanded');
+  });
+  $('.menuToggle').on('click', function(event){
+    event.preventDefault();
+    $('.header-menu').toggleClass('main-menu--expanded');
+    $('.header-search').toggleClass('main-menu--expanded');
+  });
+};
+
+pipeline.delayNav = function() {
+  var hoverTimeout;
+  var linkRemove;
+  $('.grandparent').hover(function() { 
+    if(typeof linkRemove != "undefined") {
+      linkRemove.removeClass('hover'); 
+    }
+    window.clearTimeout(hoverTimeout); 
+    var linkAdd = $(this);
+    $( linkAdd ).addClass('hover'); 
+  },function() { 
+    linkRemove = $(this);
+    hoverTimeout = window.setTimeout(function() {
+      linkRemove.removeClass('hover'); 
+    },250);
+  });
+};
+
+pipeline.tabletMenu = function() {
+  if (Modernizr.touch){
+    $('.nav--desktop .grandparent > a.nav-link, .nav--desktop .parent > a.nav-link').on( 'click', function(event){
+      if ( $(this).parent().hasClass('hover') ){
+        $(this).parent().removeClass('hover');
+      } else{
+        event.preventDefault();
+        $('.grandparent, .parent').removeClass('hover');
+        $(this).parent().addClass('hover');
+      }
+    });
+  } 
+};
+
+pipeline.smoothScroll = function() {
+  $('a[href*=#]:not([href=#]):not([data-toggle])').click(function() {
+    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+      var target = $(this.hash);
+      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+      if (target.length) {
+        $('html,body').animate({
+          scrollTop: target.offset().top
+        }, 1000);
+        return false;
+      }
+    }
+  });
+};
+
+pipeline.detectNav = function(){
+  var navWidth = $('.nav--desktop .main-menu').outerWidth();
+  var logoWidth = $('.logo-wrapper').outerWidth();
+  var widthLimit = $('.site-header .wrapper').width();
+  var totalWidth = navWidth + logoWidth;
+  if ( totalWidth < widthLimit){
+    $('.site-header, .info-bar').addClass('showDesktop');
+    $('.site-header, .info-bar').removeClass('showMobile');
+  }
+  else {
+    $('.site-header, .info-bar').addClass('showMobile');
+    $('.site-header, .info-bar').removeClass('showDesktop');
+  }
+};
+
+pipeline.sizeHero = function(){
+  var windowHeight = $(window).height();
+  var navHeight = ($('.header__wrapper').height());
+  var heroHeight = windowHeight - navHeight;
+  var heroContentHeight = $('#homepageHeroContent').height();
+  $('#homepageHero').height(heroHeight);
+  $('#homepageHeroContent').css('margin-top', function() {
+    return (heroHeight/2) - (heroContentHeight/2);
+  });
+};
+
+pipeline.videoSwap = function() {
+  $('#homepageVideoClose').on( 'click', function(event){
+    event.preventDefault();
+    $('#homepageVideo').hide();
+    $('#homepageHero').show();
+    $('.homepage-hero-video').children().remove();
+  });
+
+  $('#homepageVideoPlay').on( 'click', function(event){
+    event.preventDefault();
+    $('#homepageVideo').show();
+    $('#homepageHero').hide();
+    $('.homepage-hero-video').each(function(){
+      var element = this;
+      var video_url = $(element).attr('data-video-url');
+      var player_id = 'vimeo-embed' + video_url;
+      var oembed_url = 'https://vimeo.com/api/oembed.json?url=' + encodeURIComponent(video_url) + '&maxwidth=1024&maxheight=500&api=true&player_id=' + player_id + '&autoplay=true&loop=false&byline=false&title=false&portrait=false&color={{ settings.color_splash | remove: "#" }}&callback=?';
+      $.getJSON(oembed_url, function(data) {
+        $(element).html(data.html);
+      });
+    });
+  });
+};
+
+pipeline.positionFooterImage = function() {
+  var logoHeight = $('#footerLogoImg').height();
+  var logoOffset = ( logoHeight/-2 );
+  var logoWidth = $('#footerLogoImg').width();
+  var logoHorizontalOffset = ( logoWidth/-2 );
+  $('#footerLogo').css('top', logoOffset);
+  $('#footerLogo').css('margin-left', logoHorizontalOffset);
+  $('#footerLogo').css('opacity', '1');
+};
+$('#footerLogoImg').imagesLoaded(function() {
+  pipeline.positionFooterImage();
+});
+
+$(window).resize(function() {
+  pipeline.detectNav();
+  pipeline.equalHeight();
+  {% if settings.homepage_hero_height == '300px' %}
+    pipeline.sizeHero();
+  {% endif %}
+}).resize();
+
+{% if settings.homepage_hero_cta_image_enable %}
+$('#ctaImage').imagesLoaded(function() {
+  $(window).resize();
+});
+{% endif %}
+$('.logo-image').imagesLoaded(function() {
+  $(window).resize();
+});
+$(window).load(function(){
+  $(window).resize();
+});
+
+$(pipeline.init);

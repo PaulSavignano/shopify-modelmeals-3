@@ -1,0 +1,91 @@
+<!-- /templates/blog.liquid -->
+
+{% paginate blog.articles by 5 %}
+
+{% comment %}
+  This template is also used for listing out articles of a specific tag.
+  You can change layouts or styles by checking if current_tags is true.
+{% endcomment %}
+<div class="wrapper page-margin">
+
+  <div class="grid">
+
+    <div class="grid__item{% if settings.blog_sidebar_enable %} large--two-thirds{% else %} large--two-thirds push--large--one-sixth{% endif %}">
+
+      {% if current_tags %}
+        <h4 class="title uppercase h4">{{ 'general.meta.tags' | t: tags: current_tags.first }}</h4>      
+        <hr class="hr--small">
+      {% endif %}
+
+      {% for article in blog.articles %}
+        <div class="blog__article">
+          <header{% if article.image %} class="blog__article-header-image" style="background-image: url('{{ article.image | img_url: '1024x1024' }}');"{% endif %}>
+            <h2 class="uppercase h2"><a href="{{ article.url }}">{{ article.title }}</a></h2>
+            {% capture author %}<strong>{{ article.author }}</strong>{% endcapture %}
+            {% capture date %}<time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'month_day_year' }}</time>{% endcapture %}
+            <p class="accent">{{ 'blogs.article.author_on_date_html' | t: author: author, date: date }}</p>
+          </header>
+          <div class="rte blog__article__content">
+            {{ article.excerpt_or_content }}
+          </div>
+          <footer>
+            <ul>
+              {% if blog.comments_enabled? %}
+              <li>
+                <a class="blog__comments" href="{{ article.url }}#Comments">
+                  <strong>{{ article.comments_count }}</strong>
+                  <em>{{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}</em>
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+            {% if settings.blog_show_tags %}
+              {% include 'tags-article' %}
+            {% endif %}
+          </footer>
+          <a class="btn btn--large btn--splash btn--full uppercase" href="{{ article.url }}">{{ 'blogs.article.read_more' | t }} &rarr;</a>
+        </div>
+
+      {% endfor %}
+
+      {% if paginate.pages > 1 %}
+        <div class="text-center">
+          {% include 'pagination-custom' %}
+        </div>
+      {% endif %}
+
+    </div>
+
+    {% if settings.blog_sidebar_enable %}
+    <div class="grid__item large--one-third blog__sidebar">
+      <h2 class="uppercase h4">{{ blog.title }}</h2>      
+      <a class="icon-fallback-text blog__rss" href="{{ blog.url }}.atom" title="{{ shop.name }} RSS" target="_blank">
+        <span class="icon icon-rss"></span>
+        <span class="fallback-text">RSS</span>
+      </a>
+      <hr class="hr--small">
+      {% if blog.all_tags != blank %}
+      <h5 class="uppercase h5">Tags</h5>
+        {% for tag in blog.all_tags %}
+          <a class="blog__tag" href="/blogs/{{ blog.handle }}/tagged/{{ tag | handleize }}">{{ tag }}</a>
+        {% endfor %}
+      {% endif %}
+
+      {% if settings.blog_twitter_enable and settings.blog_twitter_widget != '' %}
+        <div class="page-margin"></div>
+        <a class="twitter-timeline" 
+          href="https://twitter.com/{{settings.social_twitter_link}}" 
+          data-widget-id="{{settings.blog_twitter_widget}}">
+          Tweets by @{{settings.social_twitter_link}}
+        </a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+      {% endif %}
+
+
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endpaginate %}

@@ -1,0 +1,8 @@
+{% assign form_action = '/cart/add'%}
+{% assign form_method = 'post'%}
+{% assign form_id = "AddToCartForm" %}
+{% assign show_quantity = settings.product_quantity %}
+
+{% include 'product-callbacks' %}
+
+{% include "product" %}

@@ -1,0 +1,27 @@
+<script>
+  var selectCallback = function(variant, selector) {
+    timber.productPage({
+      money_format: "{{ shop.money_format }}",
+      variant: variant,
+      selector: selector
+    });
+  };
+
+  {% if show_quantity %}
+    $(document).on('change', '.js-qty__num', function(){
+      var moneyFormat = "{{ shop.money_format }}",
+      $buttonPrice = $('#ButtonPrice'),
+      itemPrice = $buttonPrice.attr('data-item-price'),
+      quantity = $(this).val(),
+      quantityLabel = "";
+
+      if(quantity > 1)
+        quantityLabel = "(" + quantity + ")";
+
+      $buttonPrice.attr('data-item-quantity', quantity);
+      $buttonPrice.html("<span class='money'>" + Shopify.formatMoney(itemPrice * quantity, moneyFormat) + "</span>&nbsp;" + quantityLabel);
+    });
+  {% endif %}
+
+</script>
+

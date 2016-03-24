@@ -1,0 +1,32 @@
+<!-- /snippets/collection-grid-item.liquid -->
+
+{% assign grid_width_large = {{settings.global_grid_width_large}} %}
+{% assign grid_width_medium = {{settings.global_grid_width_medium}} %}
+{% assign grid_width_small = {{settings.global_grid_width_small}} %}
+
+{% unless grid_width_large %}
+  {% assign grid_width_large = 'large--one-quarter' %}
+{% endunless %}
+{% unless grid_width_medium %}
+  {% assign grid_width_medium = 'medium--one-third' %}
+{% endunless %}
+{% unless grid_width_small %}
+  {% assign grid_width_small = 'medium--one-half' %}
+{% endunless %}
+
+<div class="grid__item {{ grid_width_small }} {{ grid_width_medium }} {{ grid_width_large }} product-grid-item">
+  {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+  <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}" class="grid__image">
+    {% if collection.image %}
+      {{ collection.image.src | img_url: 'large' | img_tag: collection_title }}
+    {% else %}
+      {{ collection.products.first.featured_image | img_url: 'large' | img_tag: collection_title }}
+    {% endif %}
+  </a>
+  <div class="figcaption {{ settings.product_grid_style }} {{ settings.collection_text_alignment }}">
+    <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">
+      <p class="h6 name_wrapper">{{ collection.title }}</p>
+      <p class="price_wrapper">{{ 'collections.general.items_with_count' | t: count: collection.all_products_count }}</p>
+    </a>
+  </div>
+</div>

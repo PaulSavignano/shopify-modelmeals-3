@@ -1,0 +1,42 @@
+<div class="homepage-hero" id="homepageHero">
+  <div class="homepage-hero-image" style="background-image: url('{{ 'homepage_hero_image.jpg' | asset_url }}');">
+  </div>
+  <div class="homepage-hero-content wrapper" id="homepageHeroContent">
+    <div class="{{ settings.homepage_hero_align }}">
+      {% if settings.homepage_hero_cta_image_enable %}
+        <a href="{{ settings.hero_link }}" {% if settings.home_enable_video %}id="homepageVideoPlay"{% endif %}>
+          <img src="{{ 'homepage_hero_cta_image.png' | asset_url }}" alt="{{ settings.hero_headline }} | {{ settings.hero_description }} | {{ settings.hero_link_text }}" class="homepage-hero__cta-image" id="ctaImage" onerror='this.style.display = "none"'/>
+        </a>
+      {% else %}
+        {% unless settings.hero_headline == '' %}<h1 class="homepage-hero-content__title">{{ settings.hero_headline }}</h1>{% endunless %}
+        {% unless settings.hero_description == '' %}<p class="homepage-hero-content__block h4--body">{{ settings.hero_description }}</p>{% endunless %}
+        {% unless settings.hero_link_text == '' or settings.home_enable_video %}<a class="btn btn--large btn--splash uppercase" href="{{ settings.hero_link }}">{{ settings.hero_link_text }}</a>{% endunless %}
+        {% if settings.home_enable_video %}
+          <a class="icon-fallback-text homepage-hero-video__play" href="#" id="homepageVideoPlay">
+            <span class="icon icon-play"></span>
+            <span class="fallback-text">&#9658;</span>
+          </a>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+  {% if settings.homepage_hero_height == '300px' %}
+  <div class="scroll_icon_wrap">
+    <a href="#scroll" class="scroll_icon icon icon-arrow-down icon-fallback-text">
+      <span class="icon icon-arrow-down"></span>
+      <span class="fallback-text">Down</span>
+    </a>
+  </div>
+  <div id="scroll"></div>
+  {% endif %}
+  <div class="hero-image-overlay"></div>
+</div>
+
+{% if settings.home_enable_video %}
+  <div class="video-wrapper" id="homepageVideo" style="display:none;">
+    <a class="btn btn--clear uppercase homepage-hero-video__close" href="#" id="homepageVideoClose">X</a>
+    <div class="homepage-hero-video" data-video-url="{{ settings.homepage_video_vimeo_url }}">
+    </div>
+  </div>
+{% endif %}
+
