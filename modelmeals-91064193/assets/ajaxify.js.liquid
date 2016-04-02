@@ -1118,7 +1118,7 @@ var ajaxifyShopify = (function(module, $) {
           qty = qty + 1;
         } else {
           qty = qty - 1;
-          if (qty <= 1) qty = 1;
+          if (qty < 1) qty = '';
         }
 
         // Update the input's number
@@ -1136,7 +1136,7 @@ var ajaxifyShopify = (function(module, $) {
       // We have a number!
     } else {
       // Not a number. Default to 1.
-      qty = 1;
+      qty = '';
     }
     return qty;
   };

@@ -64,13 +64,12 @@
   {% endif %}
 
   {% include 'fonts' %}
-  
+
   {% comment %}
     Custom files
-  {% endcomment %} 
-  {{ '//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css' | stylesheet_tag }} 
-  {{ '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js' | script_tag }}
-  {{ 'custom-style.css' | asset_url | stylesheet_tag }}
+  {% endcomment %}
+
+
 </head>
 
 {% comment %}
@@ -125,7 +124,7 @@
       </div>
     </header>
   </div>
-  
+
   <main class="main-content" role="main">
     {{ content_for_layout }}
   </main>
@@ -338,7 +337,7 @@
              jQuery('body').trigger('ajaxCart.afterCartLoad')
            }
          });
-        } 
+        }
       });
     </script>
   {% endunless %}
