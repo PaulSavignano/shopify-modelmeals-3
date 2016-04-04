@@ -347,14 +347,14 @@ let package2qty = 0;
 function disableInputs(inputsClass, collectionRemaining) {
   let collectionInputs = inputsClass;
   for (let input of collectionInputs) {
-    if (collectionRemaining === 0 && input.value === "") {
-      input.disabled = "true";
+    if (collectionRemaining === 0 && input.children[0].children[1].value === "") {
+      input.children[0].children[1].disabled = "true";
     }
-    if (collectionRemaining === 0 && input.value !== "") {
-      input.max = "1";
+    if (collectionRemaining === 0 && input.children[0].children[1].value !== "") {
+      input.children[0].children[1].value = input.children[0].children[1].value;
     }
     if (collectionRemaining > 0) {
-      input.removeAttribute('disabled');
+      input.children[0].children[1].removeAttribute('disabled');
     }
   }
 }
@@ -418,12 +418,19 @@ function display() {
   for (let tableInput of productCollectionInputs) {
     let input = tableInput.children[0].children[1];
     if (tableInput.classList.contains('main-dish-options-qty')) {
-      input.setAttribute("max", 2 * totalPackageQty);
+      let collection1inputMax = 2 * totalPackageQty;
+      if (input.value > collection1inputMax) {
+        input.value = collection1inputMax;
+      }
     }
   	if (tableInput.classList.contains('side-dish-options-qty')) {
-      input.setAttribute("max", totalProductSelections);
+      let collection2inputMax = totalProductSelections
+      if (input.value > collection2inputMax) {
+        input.value = collection2inputMax;
+      }
     }
   }
+
 
   // Find product collection 1 quantities
   let productCollection1inputs = document.querySelectorAll(".main-dish-options-qty");
@@ -472,13 +479,14 @@ function display() {
 
 
 
+
+
 // On change functions
 function onChange() {
-  let el = $(this);
-  let input = el.siblings('.js-qty__num');
-  let parent = el.parent();
-  console.log(parent);
-  let qty = parseInt(input.val().replace(/\D/g, ''));
+  let tableInput = this.parentNode.parentNode;
+  console.log(tableInput);
+  let input = this.parentNode.children[1];
+  let qty = parseInt(input.value.replace(/\D/g, ''));
 
   // Disable product collection empty inputs if max
   let productCollection1inputs = document.querySelectorAll(".main-dish-options-qty");
@@ -486,32 +494,35 @@ function onChange() {
   disableInputs(productCollection1inputs, productCollection1remaining);
   disableInputs(productCollection2inputs, productCollection2remaining);
 
-  /*
   // Clear inputs if package quantity is reduced
-  if (this.classList.contains("package-options-qty")) {
-    if (this.getAttribute('lastvalue') === this.value) {
-      this.setAttribute('lastvalue', this.value);
+  if (tableInput.classList.contains("package-options-qty")) {
+    if (input.getAttribute('lastvalue') === input.value) {
+      input.setAttribute('lastvalue', input.value);
     } else {
-      console.log(this.value < this.getAttribute('lastvalue') ? 'decrement' : 'increment');
-      if (this.value < this.getAttribute('lastvalue')) {
-        let inputs = document.querySelectorAll(".quantity");
-        for (let input of inputs) {
+      console.log(input.value < input.getAttribute('lastvalue') ? 'decrement' : 'increment');
+      if (input.value < input.getAttribute('lastvalue')) {
+
+        let productCollection1and2inputs = document.querySelectorAll(".table-inputs");
+        for (let input of productCollection1and2inputs) {
           if (input.classList.contains('main-dish-options-qty') || input.classList.contains('side-dish-options-qty')) {
-            input.value = '';
+            input.children[0].children[1].value = '';
             if (input.classList.contains('main-dish-options-qty')) {
-              input.setAttribute("max",2);
+              let collection1inputMax = 2 * totalPackageQty;
+              if (input.value > collection1inputMax) {
+                input.value = collection1inputMax;
+              }
             }
             input.removeAttribute('disabled');
           }
         }
       }
-      if (this.value === '') {
-        this.setAttribute('lastvalue', 0);
+      if (input.value === '') {
+        input.setAttribute('lastvalue', 0);
       } else {
-        this.setAttribute('lastvalue', this.value);
+        input.setAttribute('lastvalue', input.value);
       }
     }
-  } */
+  }
   display();
 }
 display();
