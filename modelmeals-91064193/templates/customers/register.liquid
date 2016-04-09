@@ -22,6 +22,12 @@
 
         <label for="CreatePassword" class="label--hidden">{{ 'customer.register.password' | t }}</label>
         <input type="password" name="customer[password]" id="CreatePassword" placeholder="{{ 'customer.register.password' | t }}" {% if form.errors contains "password" %} class="error"{% endif %}>
+        
+        <label for="allergies" class="label--hidden">Allergies?</label>
+        <input id="allergies" type="text" name="customer[note][Allergies]" placeholder="Allergies?" {% if form.note %}value="{{ form.note }}"{% endif %}/>
+
+        <label for="how-did-you-hear-about-us" class="label--hidden">How did you hear about us?</label>
+        <input id="how-did-you-hear-about-us" type="text" name="customer[note][How-did-you-hear-about-us]" placeholder="How did you hear about us?" />
 
         <p>
           <input type="submit" value="{{ 'customer.register.submit' | t }}" class="btn btn--full">

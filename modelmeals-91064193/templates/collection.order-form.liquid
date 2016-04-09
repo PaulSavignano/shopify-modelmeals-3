@@ -1,4 +1,3 @@
-{{ '//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css' | stylesheet_tag }}
 {{ '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js' | script_tag }}
 
 <style>
@@ -7,6 +6,13 @@
     border-right:0;
     border-left: 0;
 }
+tr {
+    border-bottom: 1px solid #ddd;
+}
+input[type="text"][disabled] {
+  background-color: rgba(0,0,0,0.1);
+}
+.qty-row {border-bottom: 0; }
 .table>thead>tr>th {border: 0}
 .table>thead>tr>th>h1 {margin-bottom: 0}
 .table>thead>tr>th.product-price {padding-left: 20px;}
@@ -40,6 +46,10 @@ a {color: black}
 
 .js-qty {float: right}
 
+.add-to-cart-order-form:hover {
+  color: white;
+}
+
 </style>
 
 
@@ -61,63 +71,72 @@ a {color: black}
 </div>
 <!-- Modal End -->
 
+<div class="container">
+  <img class="center-block" src="//cdn.shopify.com/s/files/1/1182/1150/files/menu_fb348d82-a3a8-440a-8cbc-e61656153ac8_2048x2048.jpeg?16444708026538729962" alt="">
+</div>
 
 <div class="container">
 <!-- Package Options -->
-{% assign productCollection = collections.package-options %}
-{% if productCollection.products_count > 0 %}
+{% assign collection = collections.package-options %}
+{% if collection.products_count > 0 %}
   <table class="table">
     <thead>
-      <tr>
-        <th colspan="2"><h1>{{ productCollection.title }}</h1></th>
-        {% if productCollection.handle == 'package-options' %}
+      <tr class="qty-row">
+        <th colspan="2"><h1>{{ collection.title }}</h1></th>
+        {% if collection.handle == 'package-options' %}
           <th class="product-price">Price</th>
           <th class="collection-qty">Qty</th>
         {% endif %}
       </tr>
-      {% if productCollection.handle == 'main-dish-options' or productCollection.handle == 'side-dish-options' %}
+      {% if collection.handle == 'main-dish-options' or collection.handle == 'side-dish-options' %}
         <tr>
-          <th colspan="4" class="display" id="display-{{ productCollection.handle }}-qty"></th>
+          <th colspan="4" class="display" id="display-{{ collection.handle }}-qty"></th>
         </tr>
       {% endif %}
     </thead>
     <tbody>
-      {% for product in productCollection.products %}
-        <tr>
-          {% if product.featured_image %}
-            <td class="table-img">
-              <a href="#image{{ product.id }}">
-                <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ productCollection.id }}"/>
-              </a>
-            </td>
-          {% endif %}
-          <td colspan="{% if product.featured_image and product.price > 0 %}1{% elsif product.price == 0 %}2{% else %}3{% endif %}">
-            <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
-             {{ product.title }}
-            </a>
-          </td>
-          {% if product.price > 0 %}
-            <td>
-              {{ product.price | money }}
-            </td>
-          {% endif %}
-          <td class="table-inputs {{ productCollection.handle }}-qty" id="{{ product.title }}">
-            <div class="js-qty">
-              <button type="button" class="js-qty__adjust js-qty__adjust--minus" data-id="{{id}}" data-qty="{{itemMinus}}">&minus;</button>
-              <input type="text" class="js-qty__num" value="{{itemQty}}" min="0" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}" data-submit="{{submit}}">
-              <button type="button" class="js-qty__adjust js-qty__adjust--plus" data-id="{{id}}" data-qty="{{itemAdd}}">+</button>
-            </div>
-          </td>
-        </tr>
-        <!-- Image Repo -->
-        <div class="hidden" id="img-repo{{ productCollection.id }}" name="{{ product.id }}">
-          {% for image in product.images %}
-            <div class="item" id="image{{ product.id }}">
-              <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
-            </div>
+      {% for product in collection.products %}
+        {% if product.available %}
+          {% for variant in product.variants %}
+            {% if variant.available %}
+              <tr>
+                {% if product.featured_image %}
+                  <td class="table-img">
+                    <a href="#image{{ product.id }}">
+                      <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ collection.id }}"/>
+                    </a>
+                  </td>
+                {% endif %}
+                <td colspan="{% if product.featured_image and product.price > 0 %}1{% elsif product.price == 0 %}2{% else %}3{% endif %}">
+                  <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
+                   {{ product.title }}
+                  </a>
+                </td>
+                {% if product.price > 0 %}
+                  <td>
+                    {{ product.price | money }}
+                  </td>
+                {% endif %}
+                <td class="table-inputs {{ collection.handle }}-qty" id="{{ product.title }}" data-id="{{ variant.id }}">
+                  <div class="js-qty">
+                    <button type="button" class="js-qty__adjust js-qty__adjust--minus" data-id="{{id}}" data-qty="{{itemMinus}}">&minus;</button>
+                    <input type="text" class="js-qty__num" value="{{itemQty}}" min="0" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}" data-submit="{{submit}}">
+                    <button type="button" class="js-qty__adjust js-qty__adjust--plus" data-id="{{id}}" data-qty="{{itemAdd}}">+</button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Image Repo -->
+              <div class="hidden" id="img-repo{{ collection.id }}" name="{{ product.id }}">
+                {% for image in product.images %}
+                  <div class="item" id="image{{ product.id }}">
+                    <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
+                  </div>
+                {% endfor %}
+              </div>
+              <!-- Image Repo End -->
+            {% endif %}
           {% endfor %}
-        </div>
-        <!-- Image Repo End -->
+        {% endif %}
       {% endfor %}
     </tbody>
   </table>
@@ -129,60 +148,66 @@ a {color: black}
 
 
 <!-- Main Dish Options -->
-{% assign productCollection = collections.main-dish-options %}
-{% if productCollection.products_count > 0 %}
+{% assign collection = collections.main-dish-options %}
+{% if collection.products_count > 0 %}
   <table class="table">
     <thead>
-      <tr>
-        <th colspan="2"><h1>{{ productCollection.title }}</h1></th>
-        {% if productCollection.handle == 'package-options' %}
+      <tr class="qty-row">
+        <th colspan="2"><h1>{{ collection.title }}</h1></th>
+        {% if collection.handle == 'package-options' %}
           <th class="product-price">Price</th>
           <th class="collection-qty">Qty</th>
         {% endif %}
       </tr>
-      {% if productCollection.handle == 'main-dish-options' or productCollection.handle == 'side-dish-options' %}
+      {% if collection.handle == 'main-dish-options' or collection.handle == 'side-dish-options' %}
         <tr>
-          <th colspan="4" class="display" id="display-{{ productCollection.handle }}-qty"></th>
+          <th colspan="4" class="display" id="display-{{ collection.handle }}-qty"></th>
         </tr>
       {% endif %}
     </thead>
     <tbody>
-      {% for product in productCollection.products %}
-        <tr>
-          {% if product.featured_image %}
-            <td class="table-img">
-              <a href="#image{{ product.id }}">
-                <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ productCollection.id }}"/>
-              </a>
-            </td>
-          {% endif %}
-          <td colspan="{% if product.featured_image and product.price > 0 %}1{% elsif product.price == 0 %}2{% else %}3{% endif %}">
-            <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
-             {{ product.title }}
-            </a>
-          </td>
-          {% if product.price > 0 %}
-            <td>
-              {{ product.price | money }}
-            </td>
-          {% endif %}
-          <td class="table-inputs {{ productCollection.handle }}-qty" id="{{ product.title }}">
-            <div class="js-qty">
-              <button type="button" class="js-qty__adjust js-qty__adjust--minus" data-id="{{id}}" data-qty="{{itemMinus}}">&minus;</button>
-              <input type="text" class="js-qty__num" value="{{itemQty}}" min="0" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}" data-submit="{{submit}}">
-              <button type="button" class="js-qty__adjust js-qty__adjust--plus" data-id="{{id}}" data-qty="{{itemAdd}}">+</button>
-            </div>
-          </td>
-        </tr>
-        <!-- Image Repo -->
-        <div class="hidden" id="img-repo{{ productCollection.id }}" name="{{ product.id }}">
-          {% for image in product.images %}
-            <div class="item" id="image{{ product.id }}">
-              <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
-            </div>
+      {% for product in collection.products %}
+        {% if product.available %}
+          {% for variant in product.variants %}
+            {% if variant.available %}
+              <tr>
+                {% if product.featured_image %}
+                  <td class="table-img">
+                    <a href="#image{{ product.id }}">
+                      <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ collection.id }}"/>
+                    </a>
+                  </td>
+                {% endif %}
+                <td colspan="{% if product.featured_image and product.price > 0 %}1{% elsif product.price == 0 %}2{% else %}3{% endif %}">
+                  <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
+                   {{ product.title }}
+                  </a>
+                </td>
+                {% if product.price > 0 %}
+                  <td>
+                    {{ product.price | money }}
+                  </td>
+                {% endif %}
+                <td class="table-inputs {{ collection.handle }}-qty" id="{{ product.title }}" data-id="{{ variant.id }}">
+                  <div class="js-qty">
+                    <button type="button" class="js-qty__adjust js-qty__adjust--minus" data-id="{{id}}" data-qty="{{itemMinus}}">&minus;</button>
+                    <input type="text" class="js-qty__num" value="{{itemQty}}" min="0" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}" data-submit="{{submit}}">
+                    <button type="button" class="js-qty__adjust js-qty__adjust--plus" data-id="{{id}}" data-qty="{{itemAdd}}">+</button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Image Repo -->
+              <div class="hidden" id="img-repo{{ collection.id }}" name="{{ product.id }}">
+                {% for image in product.images %}
+                  <div class="item" id="image{{ product.id }}">
+                    <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
+                  </div>
+                {% endfor %}
+              </div>
+              <!-- Image Repo End -->
+            {% endif %}
           {% endfor %}
-        </div>
-        <!-- Image Repo End -->
+        {% endif %}
       {% endfor %}
     </tbody>
   </table>
@@ -194,60 +219,66 @@ a {color: black}
 
 
 <!-- Side Dish Options -->
-{% assign productCollection = collections.side-dish-options %}
-{% if productCollection.products_count > 0 %}
+{% assign collection = collections.side-dish-options %}
+{% if collection.products_count > 0 %}
   <table class="table">
     <thead>
-      <tr>
-        <th colspan="2"><h1>{{ productCollection.title }}</h1></th>
-        {% if productCollection.handle == 'package-options' %}
+      <tr class="qty-row">
+        <th colspan="2"><h1>{{ collection.title }}</h1></th>
+        {% if collection.handle == 'package-options' %}
           <th class="product-price">Price</th>
           <th class="collection-qty">Qty</th>
         {% endif %}
       </tr>
-      {% if productCollection.handle == 'main-dish-options' or productCollection.handle == 'side-dish-options' %}
+      {% if collection.handle == 'main-dish-options' or collection.handle == 'side-dish-options' %}
         <tr>
-          <th colspan="4" class="display" id="display-{{ productCollection.handle }}-qty"></th>
+          <th colspan="4" class="display" id="display-{{ collection.handle }}-qty"></th>
         </tr>
       {% endif %}
     </thead>
     <tbody>
-      {% for product in productCollection.products %}
-        <tr>
-          {% if product.featured_image %}
-            <td class="table-img">
-              <a href="#image{{ product.id }}">
-                <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ productCollection.id }}"/>
-              </a>
-            </td>
-          {% endif %}
-          <td colspan="{% if product.featured_image and product.price > 0 %}1{% elsif product.price == 0 %}2{% else %}3{% endif %}">
-            <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
-             {{ product.title }}
-            </a>
-          </td>
-          {% if product.price > 0 %}
-            <td>
-              {{ product.price | money }}
-            </td>
-          {% endif %}
-          <td class="table-inputs {{ productCollection.handle }}-qty" id="{{ product.title }}">
-            <div class="js-qty">
-              <button type="button" class="js-qty__adjust js-qty__adjust--minus" data-id="{{id}}" data-qty="{{itemMinus}}">&minus;</button>
-              <input type="text" class="js-qty__num" value="{{itemQty}}" min="0" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}" data-submit="{{submit}}">
-              <button type="button" class="js-qty__adjust js-qty__adjust--plus" data-id="{{id}}" data-qty="{{itemAdd}}">+</button>
-            </div>
-          </td>
-        </tr>
-        <!-- Image Repo -->
-        <div class="hidden" id="img-repo{{ productCollection.id }}" name="{{ product.id }}">
-          {% for image in product.images %}
-            <div class="item" id="image{{ product.id }}">
-              <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
-            </div>
+      {% for product in collection.products %}
+        {% if product.available %}
+          {% for variant in product.variants %}
+            {% if variant.available %}
+              <tr>
+                {% if product.featured_image %}
+                  <td class="table-img">
+                    <a href="#image{{ product.id }}">
+                      <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ collection.id }}"/>
+                    </a>
+                  </td>
+                {% endif %}
+                <td colspan="{% if product.featured_image and product.price > 0 %}1{% elsif product.price == 0 %}2{% else %}3{% endif %}">
+                  <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
+                   {{ product.title }}
+                  </a>
+                </td>
+                {% if product.price > 0 %}
+                  <td>
+                    {{ product.price | money }}
+                  </td>
+                {% endif %}
+                <td class="table-inputs {{ collection.handle }}-qty" id="{{ product.title }}" data-id="{{ variant.id }}">
+                  <div class="js-qty">
+                    <button type="button" class="js-qty__adjust js-qty__adjust--minus" data-id="{{id}}" data-qty="{{itemMinus}}">&minus;</button>
+                    <input type="text" class="js-qty__num" value="{{itemQty}}" min="0" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}" data-submit="{{submit}}">
+                    <button type="button" class="js-qty__adjust js-qty__adjust--plus" data-id="{{id}}" data-qty="{{itemAdd}}">+</button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Image Repo -->
+              <div class="hidden" id="img-repo{{ collection.id }}" name="{{ product.id }}">
+                {% for image in product.images %}
+                  <div class="item" id="image{{ product.id }}">
+                    <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
+                  </div>
+                {% endfor %}
+              </div>
+              <!-- Image Repo End -->
+            {% endif %}
           {% endfor %}
-        </div>
-        <!-- Image Repo End -->
+        {% endif %}
       {% endfor %}
     </tbody>
   </table>
@@ -259,56 +290,63 @@ a {color: black}
 
 
 <!-- Add On Options -->
-{% assign productCollection = collections.add-on-options %}
-{% if productCollection.products_count > 0 %}
+{% assign collection = collections.add-on-options %}
+{% if collection.products_count > 0 %}
   <table class="table">
     <thead>
-      <tr>
-        <th colspan="2"><h1>{{ productCollection.title }}</h1></th>
-        {% if productCollection.handle == 'package-options' %}
+      <tr class="qty-row">
+        <th colspan="2"><h1>{{ collection.title }}</h1></th>
+        {% if collection.handle == 'package-options' %}
           <th class="product-price">Price</th>
           <th class="collection-qty">Qty</th>
         {% endif %}
       </tr>
-      {% if productCollection.handle == 'main-dish-options' or productCollection.handle == 'side-dish-options' %}
+      {% if collection.handle == 'main-dish-options' or collection.handle == 'side-dish-options' %}
         <tr>
-          <th colspan="4" class="display" id="display-{{ productCollection.handle }}-qty"></th>
+          <th colspan="4" class="display" id="display-{{ collection.handle }}-qty"></th>
         </tr>
       {% endif %}
     </thead>
     <tbody>
-      {% for product in productCollection.products %}
-        <tr>
-          {% if product.featured_image %}
-            <td class="table-img">
-              <a href="#image{{ product.id }}">
-                <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ productCollection.id }}"/>
-              </a>
-            </td>
-          {% endif %}
-          <td colspan="{% if product.featured_image and product.price > 0 %}1{% elsif product.price == 0 %}2{% else %}3{% endif %}">
-            <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
-             {{ product.title }}
-            </a>
-          </td>
-          {% if product.price > 0 %}
-            <td>
-              {{ product.price | money }}
-            </td>
-          {% endif %}
-          <td class="table-inputs">
-            <input onfocus="this.select()" class="quantity field" id="{{ product.title }}" data-id="{{ variant.id }}" min="0" type="number" value="" tabindex="1"/>
-          </td>
-        </tr>
-        <!-- Image Repo -->
-        <div class="hidden" id="img-repo{{ productCollection.id }}" name="{{ product.id }}">
-          {% for image in product.images %}
-            <div class="item" id="image{{ product.id }}">
-              <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
-            </div>
+      {% for product in collection.products %}
+        {% if product.available %}
+          {% for variant in product.variants %}
+            {% if variant.available %}
+              <tr>
+                {% if product.featured_image %}
+                  <td class="table-img">
+                    <a href="#image{{ product.id }}">
+                      <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ collection.id }}"/>
+                    </a>
+                  </td>
+                {% endif %}
+                <td colspan="{% if product.featured_image and product.price > 0 %}1{% elsif product.price == 0 %}2{% else %}3{% endif %}">
+                  <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
+                   {{ product.title }}
+                  </a>
+                </td>
+                {% if product.price > 0 %}
+                  <td>
+                    {{ product.price | money }}
+                  </td>
+                {% endif %}
+                <td class="table-inputs {{ collection.handle }}-qty" id="{{ product.title }}" data-id="{{ variant.id }}">
+                  <input onfocus="this.select()" class="quantity field {{ collection.handle }}-qty" id="{{ product.title }}" data-id="{{ variant.id }}" min="" type="number" value="" tabindex="1"/>
+
+                </td>
+              </tr>
+              <!-- Image Repo -->
+              <div class="hidden" id="img-repo{{ collection.id }}" name="{{ product.id }}">
+                {% for image in product.images %}
+                  <div class="item" id="image{{ product.id }}">
+                    <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
+                  </div>
+                {% endfor %}
+              </div>
+              <!-- Image Repo End -->
+            {% endif %}
           {% endfor %}
-        </div>
-        <!-- Image Repo End -->
+        {% endif %}
       {% endfor %}
     </tbody>
   </table>
@@ -321,7 +359,7 @@ a {color: black}
 
 <!-- Add to cart -->
 <div class="action-bar clearfix">
-  <input class="action-button submit button btn right add-to-cart-order-form" type="button" value="Add to the cart" disabled/>
+  <input class="action-button submit button btn right add-to-cart-order-form" type="button" value="ADD TO CART" disabled/>
 </div>
 <!-- Add to cart end -->
 </div>
@@ -382,7 +420,6 @@ function displaySelected(collectionRemaining, display, collectionSelected) {
     display.classList.add("hidden");
     display.classList.remove("show");
     display.innerHTML = "";
-    console.log('There are no ' + collectionSelected);
   }
 }
 
@@ -501,7 +538,6 @@ window.onload = function () {
         let input = button.parentNode.children[1];
         input.setAttribute('lastvalue', input.value);
         addEvent(button, "click", function () {
-          console.log('You clicked a button');
           let maxVal;
           if (productCollection1remaining > 0) {
             maxVal = 2 * totalPackageQty;
@@ -509,7 +545,6 @@ window.onload = function () {
             maxVal = input.getAttribute('lastvalue');
           }
           let thisVal = this.parentNode.children[1].value;
-          console.log(thisVal);
           if (thisVal > maxVal) {
             this.parentNode.children[1].value = maxVal;
           }
@@ -541,7 +576,6 @@ window.onload = function () {
         let input = button.parentNode.children[1];
         input.setAttribute('lastvalue', input.value);
         addEvent(button, "click", function () {
-          console.log('You clicked a button');
           let maxVal;
           if (productCollection2remaining > 0) {
             maxVal = totalProductSelections;
@@ -549,7 +583,6 @@ window.onload = function () {
             maxVal = input.getAttribute('lastvalue');
           }
           let thisVal = this.parentNode.children[1].value;
-          console.log(thisVal);
           if (thisVal > maxVal) {
             this.parentNode.children[1].value = maxVal;
           }
@@ -600,6 +633,7 @@ window.onload = function () {
   let inputButtons = document.querySelectorAll('.js-qty__adjust');
   for (let i = 0; i < inputButtons.length; i++) {
     inputButtons[i].addEventListener('click', onChange, false);
+    inputButtons[i].parentNode.children[1].addEventListener('keyup', onChange, false);
   }
 }
 
@@ -705,10 +739,10 @@ jQuery(function($) {
   $('.add-to-cart-order-form').click(function() {
     // Resetting.
     Shopify.itemsToAdd = [];
-    $('.quantity').each(function() {
+    $('.js-qty__num').each(function() {
       var quantity = parseInt($(this).val(), 10);
       if (quantity) {
-        Shopify.itemsToAdd.push( { id: $(this).attr('data-id'), quantity: quantity } );
+        Shopify.itemsToAdd.push( { id: $(this).parent().parent().attr('data-id'), quantity: quantity } );
       }
     });
     if (Shopify.itemsToAdd.length) {

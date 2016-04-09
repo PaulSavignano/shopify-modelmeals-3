@@ -979,6 +979,14 @@ var ajaxifyShopify = (function(module, $) {
       updateQuantity(id, qty);
     });
 
+    // Find and format next Sunday
+    var today = new Date();
+    var month = today.getMonth();
+    var day = today.getDate() + ((7-today.getDay()));
+    var year = today.getFullYear();
+    var nextSunday = new Date(today.getFullYear(),today.getMonth(),today.getDate()+(7-today.getDay()));
+    document.getElementById('date').innerHTML = month + "/" + day + "/" + year;
+
     function updateQuantity(id, qty) {
       // Add activity classes when changing cart quantities
       if (!settings.useCartTemplate) {
@@ -1118,7 +1126,7 @@ var ajaxifyShopify = (function(module, $) {
           qty = qty + 1;
         } else {
           qty = qty - 1;
-          if (qty < 1) qty = '';
+          if (qty < 1) qty = 0;
         }
 
         // Update the input's number
@@ -1136,7 +1144,7 @@ var ajaxifyShopify = (function(module, $) {
       // We have a number!
     } else {
       // Not a number. Default to 1.
-      qty = '';
+      qty = 0;
     }
     return qty;
   };

@@ -1,3 +1,12 @@
+<style>
+.delivery-date {
+  float: left;
+  font-weight: 700;
+}
+.js-qty {
+  display: none;
+}
+</style>
 <!-- /templates/cart.liquid -->
 {% comment %}
 
@@ -46,14 +55,14 @@
 
             <div class="grid__item large--one-half">
               <div class="grid--full cart__row--table-large">
-
+                <!-- Remove cart images
                 <div class="grid__item one-third">
                   <a href="{{ item.url | within: collections.all }}" class="cart__image">
                     <img src="{{ item | img_url: 'small' }}" alt="{{ item.title | escape }}">
                   </a>
                 </div>
-
-                <div class="grid__item two-thirds cart__item__title">
+                Remove cart images end -->
+                <div class="grid__item cart__item__title">
                   <a href="{{ item.url }}" class="h4--body">
                     {{ item.product.title }}
                   </a>
@@ -84,10 +93,10 @@
                       {% endunless %}
                     {% endfor %}
                   {% endif %}
-
+                  <!-- Remove remove button
                   <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="cart__remove uppercase lighten" data-id="{{ item.id }}">
                     <small>{{ 'cart.general.remove' | t }}</small>
-                  </a>
+                  </a> -->
                 </div>
 
               </div>
@@ -96,25 +105,32 @@
             <div class="grid__item large--one-half">
               <div class="grid--full cart__row--table-large">
                 {% if settings.product_quantity %}
-                  <div class="grid__item one-third text-left">
-                    <span class="cart__mini-labels">{{ 'cart.label.price' | t }}</span>
-                    <span class="h3--body money">{{ item.price | money }}</span>
-                  </div>
+                    <div class="grid__item one-third text-left">
+                      {% if item.price > 0 %}
+                        <span class="cart__mini-labels">{{ 'cart.label.price' | t }}</span>
+                        <span class="h3--body money">{{ item.price | money }}</span>
+                      {% endif %}
+                    </div>
 
                   <div class="grid__item one-third text-center">
                     <span class="cart__mini-labels">{{ 'cart.label.quantity' | t }}</span>
                     {% comment %}
                       Added data-id for the ajax cart implementation only.
                     {% endcomment %}
-                    <input type="number" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}" data-submit="true" class="ajaxcart--hide">
+                    <!-- hide input and display with span -->
+                      <input type="number" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}" data-submit="true" class="ajaxcart--hide hidden">
+                    <!-- hide input and display with span end -->
+                    <span class="h3--body cart__quantity-selector">{{ item.quantity | t }}</span>
                   </div>
                 {% else %}
                   <div class="grid__item two-thirds"></div>
                 {% endif %}
 
                 <div class="grid__item one-third text-right">
-                  <span class="cart__mini-labels">{{ 'cart.label.total' | t }}</span>
-                  <span class="h3--body money">{{ item.line_price | money }}</span>
+                  {% if item.line_price > 0 %}
+                    <span class="cart__mini-labels">{{ 'cart.label.total' | t }}</span>
+                    <span class="h3--body money">{{ item.line_price | money }}</span>
+                  {% endif %}
                 </div>
               </div>
 
@@ -136,10 +152,18 @@
             - Make sure you have name="note" for the message to be submitted properly
         {% endcomment %}
         {% if settings.cart_notes_enable %}
+
           <div class="grid__item large--one-half cart__instructions">
+            <p class="delivery-date">Delivery Date:&nbsp;&nbsp;<span id="date"></span></p><br><br>
+            <label class="cart__instructions__label" for="delivery-details" class="cart-notes">Delivery details (gate codes, where to leave the box, etc):</label>
+            <input id="delivery-details" class="slideIn-fadeIn" type="text" name="attributes[delivery-details]" value="{{ cart.attributes.delivery-details }}" />
+            <label class="cart__instructions__label" for="anything-else-we-should-know" class="cart-notes">Anything else you'd like us to know?:</label>
+            <input id="anything-else-we-should-know" class="slideIn-fadeIn" type="text" name="attributes[anything-else-we-should-know]" value="{{ cart.attributes.anything-else-we-should-know }}" />
             <label class="cart__instructions__label" for="CartSpecialInstructions">{{ 'cart.general.note' | t }}</label>
             <textarea name="note" class="input-full" id="CartSpecialInstructions">{{ cart.note }}</textarea>
           </div>
+
+
         {% endif %}
         <div class="grid__item {% if settings.cart_notes_enable %} large--one-half text-right{% endif %}">
           <p class="cart__footer__text">
@@ -147,7 +171,9 @@
             <span class="h3--body cart__subtotal money">{{ cart.total_price | money }}</span>
           </p>
           <p class="cart__footer__text"><em>{{ 'cart.general.shipping_at_checkout' | t }}</em></p>
-          <input type="submit" name="update" class="btn--secondary update-cart btn--large uppercase" value="{{ 'cart.general.update' | t }}">
+          <!-- change update button to remove
+          <input type="submit" name="update" class="btn--secondary update-cart btn--large uppercase" value="{{ 'cart.general.update' | t }}"> -->
+          <input type="submit" id="remove" name="remove" class="btn--secondary update-cart btn--large uppercase" value="{{ 'cart.general.remove' | t }}">
           <span><input type="submit" name="checkout" class="btn uppercase btn--large checkout__button" value="{{ 'cart.general.checkout' | t }}"></span>
         </div>
       </div>
@@ -166,3 +192,24 @@
     <a href="/collections/all" class="btn btn--large">{{ 'cart.general.continue_browsing_html' | t }}</a>
   </div>
 {% endif %}
+
+
+
+<!-- Clear cart -->
+<script>
+"use strict";
+//  NodeList iteration not support by Chrome and Safari
+NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
+function removeFromCart() {
+  var inputsClear = document.querySelectorAll('.js-qty__num')
+  for (let input of inputsClear) {
+    input.setAttribute("value", 0);
+  }
+}
+let items = document.querySelectorAll('.cart__quantity-selector');
+console.log(items.length);
+if (items.length > 0) {
+  let cartClear = document.getElementById("remove");
+  cartClear.addEventListener('click', removeFromCart, false);
+}
+</script>
