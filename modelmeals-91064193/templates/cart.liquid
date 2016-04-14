@@ -118,7 +118,7 @@
                       Added data-id for the ajax cart implementation only.
                     {% endcomment %}
                     <!-- hide input and display with span -->
-                      <input type="number" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}" data-submit="true" class="ajaxcart--hide hidden">
+                      <input class="cart__quantity-selector hidden" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0">
                     <!-- hide input and display with span end -->
                     <span class="h3--body cart__quantity-selector">{{ item.quantity | t }}</span>
                   </div>
@@ -197,19 +197,15 @@
 
 <!-- Clear cart -->
 <script>
-"use strict";
-//  NodeList iteration not support by Chrome and Safari
 NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
+let inputs = document.querySelectorAll('.cart__quantity-selector');
 function removeFromCart() {
-  var inputsClear = document.querySelectorAll('.js-qty__num')
-  for (let input of inputsClear) {
+  for (let input of inputs) {
     input.setAttribute("value", 0);
   }
 }
-let items = document.querySelectorAll('.cart__quantity-selector');
-console.log(items.length);
-if (items.length > 0) {
-  let cartClear = document.getElementById("remove");
-  cartClear.addEventListener('click', removeFromCart, false);
+if (inputs.length > 0) {
+  let clearCart = document.getElementById("remove");
+  clearCart.addEventListener('click', removeFromCart, false);
 }
 </script>

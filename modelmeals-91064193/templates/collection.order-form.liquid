@@ -5,10 +5,10 @@
     vertical-align: middle;
     border-right:0;
     border-left: 0;
-}
-tr {
     border-bottom: 1px solid #ddd;
 }
+
+.input-group {float: right}
 input[type="text"][disabled] {
   background-color: rgba(0,0,0,0.1);
 }
@@ -20,22 +20,12 @@ h4#display-main-options-qty {margin-top: 0}
 .table>thead>tr>th.caption {padding-top: 0}
 #main-dish-table {border-top: none}
 .display-qty {font-size: 16px}
-.table>thead>tr>th.collection-qty {text-align: right; padding-right: 50px;}
+.table>thead>tr>th.collection-qty {text-align: right; padding-right: 72px;}
 .table-inputs {text-align: right;}
 input[type="number"], select {display: inline;}
 a {color: black}
-.table-img { width: 80px }
-.action-bar { margin: 15px 0; }
-.action-bar.top { margin: 30px 0 0; }
-.action-bar h1 { margin:0; padding: 0; line-height:1 }
-.left { float: left; }
-.right { float: right; }
-.clearfix:before, .clearfix:after { content: ""; display: table; }
-.clearfix:after { clear: both; }
-.clearfix { zoom: 1; }
+.table-img {width: 80px}
 .quantity { text-align: center; width: 60px !important; margin: 0 !important; }
-
-.modal-dialog {}
 .thumbnail {margin-bottom:6px;}
 
 .carousel-control.left,.carousel-control.right{
@@ -44,11 +34,16 @@ a {color: black}
   width:5%;
 }
 
-.js-qty {float: right}
-
 .add-to-cart-order-form:hover {
   color: white;
 }
+.add-to-cart-button {
+  float: right;
+  width: 144px;
+  margin-right: 8px;
+}
+.form-control {height: 37px;}
+.order-form-inputs {width: 144px}
 
 </style>
 
@@ -90,7 +85,7 @@ a {color: black}
       </tr>
       {% if collection.handle == 'main-dish-options' or collection.handle == 'side-dish-options' %}
         <tr>
-          <th colspan="4" class="display" id="display-{{ collection.handle }}-qty"></th>
+          <th colspan="4" class="display" id="display-{{ collection.handle }}"></th>
         </tr>
       {% endif %}
     </thead>
@@ -117,11 +112,19 @@ a {color: black}
                     {{ product.price | money }}
                   </td>
                 {% endif %}
-                <td class="table-inputs {{ collection.handle }}-qty" id="{{ product.title }}" data-id="{{ variant.id }}">
-                  <div class="js-qty">
-                    <button type="button" class="js-qty__adjust js-qty__adjust--minus" data-id="{{id}}" data-qty="{{itemMinus}}">&minus;</button>
-                    <input type="text" class="js-qty__num" value="{{itemQty}}" min="0" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}" data-submit="{{submit}}">
-                    <button type="button" class="js-qty__adjust js-qty__adjust--plus" data-id="{{id}}" data-qty="{{itemAdd}}">+</button>
+                <td class="table-inputs">
+                  <div class="input-group order-form-inputs">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default btn-number" data-type="minus" data-field="{{ variant.id }}">
+                        <span class="glyphicon glyphicon-minus"></span>
+                      </button>
+                    </span>
+                    <input type="text" name="{{ variant.id }}" class="form-control input-number text-center {{ collection.handle }}" id="{{ product.title }}" data-id="{{ variant.id }}" value="">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="{{ variant.id }}">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                    </span>
                   </div>
                 </td>
               </tr>
@@ -161,7 +164,7 @@ a {color: black}
       </tr>
       {% if collection.handle == 'main-dish-options' or collection.handle == 'side-dish-options' %}
         <tr>
-          <th colspan="4" class="display" id="display-{{ collection.handle }}-qty"></th>
+          <th colspan="4" class="display" id="display-{{ collection.handle }}"></th>
         </tr>
       {% endif %}
     </thead>
@@ -188,11 +191,19 @@ a {color: black}
                     {{ product.price | money }}
                   </td>
                 {% endif %}
-                <td class="table-inputs {{ collection.handle }}-qty" id="{{ product.title }}" data-id="{{ variant.id }}">
-                  <div class="js-qty">
-                    <button type="button" class="js-qty__adjust js-qty__adjust--minus" data-id="{{id}}" data-qty="{{itemMinus}}">&minus;</button>
-                    <input type="text" class="js-qty__num" value="{{itemQty}}" min="0" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}" data-submit="{{submit}}">
-                    <button type="button" class="js-qty__adjust js-qty__adjust--plus" data-id="{{id}}" data-qty="{{itemAdd}}">+</button>
+                <td class="table-inputs">
+                  <div class="input-group order-form-inputs">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default btn-number" data-type="minus" data-field="{{ variant.id }}">
+                        <span class="glyphicon glyphicon-minus"></span>
+                      </button>
+                    </span>
+                    <input type="text" name="{{ variant.id }}" class="form-control input-number text-center {{ collection.handle }}" id="{{ product.title }}" data-id="{{ variant.id }}" value="">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="{{ variant.id }}">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                    </span>
                   </div>
                 </td>
               </tr>
@@ -232,7 +243,7 @@ a {color: black}
       </tr>
       {% if collection.handle == 'main-dish-options' or collection.handle == 'side-dish-options' %}
         <tr>
-          <th colspan="4" class="display" id="display-{{ collection.handle }}-qty"></th>
+          <th colspan="4" class="display" id="display-{{ collection.handle }}"></th>
         </tr>
       {% endif %}
     </thead>
@@ -259,11 +270,19 @@ a {color: black}
                     {{ product.price | money }}
                   </td>
                 {% endif %}
-                <td class="table-inputs {{ collection.handle }}-qty" id="{{ product.title }}" data-id="{{ variant.id }}">
-                  <div class="js-qty">
-                    <button type="button" class="js-qty__adjust js-qty__adjust--minus" data-id="{{id}}" data-qty="{{itemMinus}}">&minus;</button>
-                    <input type="text" class="js-qty__num" value="{{itemQty}}" min="0" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}" data-submit="{{submit}}">
-                    <button type="button" class="js-qty__adjust js-qty__adjust--plus" data-id="{{id}}" data-qty="{{itemAdd}}">+</button>
+                <td class="table-inputs">
+                  <div class="input-group order-form-inputs">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default btn-number" data-type="minus" data-field="{{ variant.id }}">
+                        <span class="glyphicon glyphicon-minus"></span>
+                      </button>
+                    </span>
+                    <input type="text" name="{{ variant.id }}" class="form-control input-number text-center {{ collection.handle }}" id="{{ product.title }}" data-id="{{ variant.id }}" value="">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="{{ variant.id }}">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                    </span>
                   </div>
                 </td>
               </tr>
@@ -303,7 +322,7 @@ a {color: black}
       </tr>
       {% if collection.handle == 'main-dish-options' or collection.handle == 'side-dish-options' %}
         <tr>
-          <th colspan="4" class="display" id="display-{{ collection.handle }}-qty"></th>
+          <th colspan="4" class="display" id="display-{{ collection.handle }}"></th>
         </tr>
       {% endif %}
     </thead>
@@ -330,9 +349,20 @@ a {color: black}
                     {{ product.price | money }}
                   </td>
                 {% endif %}
-                <td class="table-inputs {{ collection.handle }}-qty" id="{{ product.title }}" data-id="{{ variant.id }}">
-                  <input onfocus="this.select()" class="quantity field {{ collection.handle }}-qty" id="{{ product.title }}" data-id="{{ variant.id }}" min="" type="number" value="" tabindex="1"/>
-
+                <td class="table-inputs">
+                  <div class="input-group order-form-inputs">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default btn-number" data-type="minus" data-field="{{ variant.id }}">
+                        <span class="glyphicon glyphicon-minus"></span>
+                      </button>
+                    </span>
+                    <input type="text" name="{{ variant.id }}" class="form-control input-number text-center {{ collection.handle }}" id="{{ product.title }}" data-id="{{ variant.id }}" value="">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="{{ variant.id }}">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                    </span>
+                  </div>
                 </td>
               </tr>
               <!-- Image Repo -->
@@ -358,16 +388,18 @@ a {color: black}
 
 
 <!-- Add to cart -->
-<div class="action-bar clearfix">
-  <input class="action-button submit button btn right add-to-cart-order-form" type="button" value="ADD TO CART" disabled/>
+<div class="row">
+  <div class="col-md-12">
+    <div class="add-to-cart-button">
+      <button class="btn btn-block add-to-cart-order-form" id="add-to-cart-order-form" disabled/>ADD TO CART</button>
+    </div>
+  </div>
 </div>
 <!-- Add to cart end -->
 </div>
 
 
 <script>
-"use strict";
-//  NodeList iteration not support by Chrome and Safari
 NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
 
 let package8selections = 4;
@@ -386,14 +418,14 @@ let package2qty = 0;
 function disableInputs(inputsClass, collectionRemaining) {
   let collectionInputs = inputsClass;
   for (let input of collectionInputs) {
-    if (collectionRemaining === 0 && input.children[0].children[1].value === "") {
-      input.children[0].children[1].disabled = "true";
+    if (collectionRemaining === 0 && input.value === "") {
+      input.disabled = "true";
     }
-    if (collectionRemaining === 0 && input.children[0].children[1].value !== "") {
-      input.children[0].children[1].value = input.children[0].children[1].value;
+    if (collectionRemaining === 0 && input.value !== "") {
+      input.value = input.value;
     }
     if (collectionRemaining > 0) {
-      input.children[0].children[1].removeAttribute('disabled');
+      input.removeAttribute('disabled');
     }
   }
 }
@@ -403,14 +435,14 @@ function displaySelected(collectionRemaining, display, collectionSelected) {
   if (collectionRemaining > 0) {
     display.classList.remove("hidden");
     display.classList.add("show");
-    if (display.id === 'display-main-dish-options-qty') {
+    if (display.id === 'display-main-dish-options') {
       display.innerHTML = "Choose " + collectionRemaining + " (max " + 2 * totalPackageQty + " of each main dish)";
     } else {
       display.innerHTML = "Choose " + collectionRemaining;
     }
     display.style.color = 'black'
   } else if (collectionSelected > 0) {
-    if (display.id === 'display-main-dish-options-qty') {
+    if (display.id === 'display-main-dish-options') {
       display.innerHTML = "You've choosen " + collectionSelected + ", you're ready for your side dishes.";
     } else {
       display.innerHTML = "You've choosen " + collectionSelected + ", you're ready for any add on options.";
@@ -434,6 +466,24 @@ function addEvent(element, event, callback) {
   }
 }
 
+// set product collection 1 & 2 input max
+function setMax(productCollectionInputs, productCollectionRemaining, totalPackageQty, totalProductSelections) {
+  for (let input of productCollectionInputs) {
+    let max;
+    input.setAttribute('lastvalue', input.value);
+    if (productCollectionRemaining > 0) {
+      if (input.classList.contains('main-dish-options')) {
+        max = 2 * totalPackageQty;
+      } else if (input.classList.contains('side-dish-options')) {
+        max = totalProductSelections;
+      }
+    } else {
+      max = input.getAttribute('lastvalue');
+    }
+    input.setAttribute('max', max);
+  }
+}
+
 
 
 
@@ -441,10 +491,9 @@ window.onload = function () {
 
   function display() {
     // Get total package quantities
-    let packageQuantities = document.querySelectorAll(".package-options-qty");
-    for (let packageInput of packageQuantities) {
-      let input = packageInput.children[0].children[1];
-      if (packageInput.id === "16-Dish Package") {
+    let packageInputs = document.querySelectorAll(".package-options");
+    for (let input of packageInputs) {
+      if (input.id === "16-Dish Package") {
         if (input.value === '') {
           package1qty = 0;
           package1selections = 0;
@@ -453,7 +502,7 @@ window.onload = function () {
           package1selections = package1qty * package16selections;
         }
       }
-      if (packageInput.id === "8-Dish Package") {
+      if (input.id === "8-Dish Package") {
         if (input.value === '') {
           package2qty = 0;
           package2selections = 0;
@@ -469,154 +518,115 @@ window.onload = function () {
     totalProductSelections = package1selections + package2selections;
 
     // Find product collection 1 quantities
-    let productCollection1inputs = document.querySelectorAll(".main-dish-options-qty");
+    let productCollection1inputs = document.querySelectorAll(".main-dish-options");
     let productCollection1selected = 0;
-    for (let tableInput of productCollection1inputs) {
-      let input = tableInput.children[0].children[1];
+    for (let input of productCollection1inputs) {
       if (input.value !== '') {
         productCollection1selected += parseInt(input.value,10);
       }
     }
 
     // Find Product Collection2 Quantities
-    let productCollection2inputs = document.querySelectorAll(".side-dish-options-qty");
+    let productCollection2inputs = document.querySelectorAll(".side-dish-options");
     let productCollection2selected = 0;
-    for (let tableInput of productCollection2inputs) {
-      let input = tableInput.children[0].children[1];
+    for (let input of productCollection2inputs) {
       if (input.value !== '') {
         productCollection2selected += parseInt(input.value,10);
       }
     }
 
     // Display Selected for Product Collection1
-    let displayProductCollection1selected = document.getElementById('display-main-dish-options-qty');
+    let displayProductCollection1selected = document.getElementById('display-main-dish-options');
     productCollection1remaining = totalProductSelections - productCollection1selected;
     displaySelected(productCollection1remaining, displayProductCollection1selected, productCollection1selected);
 
     // Display Selected for Product Collection2
-    let displayProductCollection2selected = document.getElementById('display-side-dish-options-qty');
+    let displayProductCollection2selected = document.getElementById('display-side-dish-options');
     productCollection2remaining = totalProductSelections - productCollection2selected;
     displaySelected(productCollection2remaining, displayProductCollection2selected, productCollection2selected);
 
     // Enable add to cart button
     totalSelectionsRemaining = productCollection1remaining + productCollection2remaining;
-    let addToCartBtn = document.querySelectorAll(".action-button");
-    for (let btn of addToCartBtn) {
-      if (totalSelectionsRemaining === 0 && totalPackageQty > 0) {
-        btn.removeAttribute('disabled');
-      } else {
-        btn.setAttribute('disabled', 'disabled');
-      }
+    let addToCartBtn = document.getElementById("add-to-cart-order-form");
+    if (totalSelectionsRemaining === 0 && totalPackageQty > 0) {
+      addToCartBtn.removeAttribute('disabled');
+    } else {
+      addToCartBtn.setAttribute('disabled', 'disabled');
     }
     // Disable product collection1 empty inputs if max
     disableInputs(productCollection1inputs, productCollection1remaining);
     disableInputs(productCollection2inputs, productCollection2remaining);
 
+    // set input max for product collection 1 & 2
+    setMax(productCollection1inputs, productCollection1remaining, totalPackageQty, totalProductSelections);
+    setMax(productCollection2inputs, productCollection2remaining, totalPackageQty, totalProductSelections);
 
 
-    // Set max for main dishes
-    let productCollection1inputsMax = document.querySelectorAll(".main-dish-options-qty");
-    for (let tableInput of productCollection1inputsMax) {
-      let input = tableInput.children[0].children[1];
-      input.setAttribute('lastvalue', input.value);
-      addEvent(input, "keyup", function () {
-        let maxVal;
-        if (productCollection1remaining > 0) {
-          maxVal = 2 * totalPackageQty;
-        } else {
-          maxVal = input.getAttribute('lastvalue');
-        }
-        let thisVal = this.value;
-        if (thisVal > maxVal) {
-          this.value = maxVal;
-        }
-      });
-    }
-    let productCollection1buttons = document.querySelectorAll(".js-qty__adjust");
-    for (let button of productCollection1buttons) {
-      if (button.parentNode.parentNode.classList.contains("main-dish-options-qty")) {
-        let input = button.parentNode.children[1];
-        input.setAttribute('lastvalue', input.value);
-        addEvent(button, "click", function () {
-          let maxVal;
-          if (productCollection1remaining > 0) {
-            maxVal = 2 * totalPackageQty;
-          } else {
-            maxVal = input.getAttribute('lastvalue');
-          }
-          let thisVal = this.parentNode.children[1].value;
-          if (thisVal > maxVal) {
-            this.parentNode.children[1].value = maxVal;
-          }
-        });
-      }
-    }
-
-    // Set max for side dishes
-    let productCollection2inputsMax = document.querySelectorAll(".side-dish-options-qty");
-    for (let tableInput of productCollection2inputsMax) {
-      let input = tableInput.children[0].children[1];
-      input.setAttribute('lastvalue', input.value);
-      addEvent(input, "keyup", function () {
-        let maxVal;
-        if (productCollection2remaining > 0) {
-          maxVal = totalProductSelections;
-        } else {
-          maxVal = input.getAttribute('lastvalue');
-        }
-        let thisVal = this.value;
-        if (thisVal > maxVal) {
-          this.value = maxVal;
-        }
-      });
-    }
-    let productCollection2buttons = document.querySelectorAll(".js-qty__adjust");
-    for (let button of productCollection2buttons) {
-      if (button.parentNode.parentNode.classList.contains("side-dish-options-qty")) {
-        let input = button.parentNode.children[1];
-        input.setAttribute('lastvalue', input.value);
-        addEvent(button, "click", function () {
-          let maxVal;
-          if (productCollection2remaining > 0) {
-            maxVal = totalProductSelections;
-          } else {
-            maxVal = input.getAttribute('lastvalue');
-          }
-          let thisVal = this.parentNode.children[1].value;
-          if (thisVal > maxVal) {
-            this.parentNode.children[1].value = maxVal;
-          }
-        });
-      }
-    }
   }
   display();
 
   // On change functions
   function onChange() {
+    // check if button or input element was changed
+    let input;
+    if (this.classList.contains('btn-number')) {
+      input = this.parentNode.parentNode.children[1];
+    } else {
+      input = this;
+    }
+
+    // check is qty is a number is not set to zero
+    let qty = parseInt(input.value.replace(/\D/g, ''));
+    if (isNaN(qty)) {
+      qty = 0;
+    }
+
+    let dataType = this.getAttribute('data-type');
+    if (dataType === "minus") {
+      if (qty > 0) {
+        qty = qty - 1;
+      }
+    } else if (dataType === "plus") {
+      console.log(this);
+      if (input.classList.contains('main-dish-options') || input.classList.contains('side-dish-options')) {
+        console.log('we have a product');
+        if (qty < input.getAttribute('max')) {
+          qty = qty + 1;
+        }
+      } else {
+        qty = qty + 1
+      }
+    }
+
+    if (qty === 0) {
+      input.value = ''
+    } else {
+      input.value = qty;
+    }
+    /*
     let tableInput = this.parentNode.parentNode;
     let input = this.parentNode.children[1];
     let qty = parseInt(input.value.replace(/\D/g, ''));
+    let button = this.getAttribute('data-type');
+*/
 
     // Disable product collection empty inputs if max
-    let productCollection1inputs = document.querySelectorAll(".main-dish-options-qty");
-    let productCollection2inputs = document.querySelectorAll(".side-dish-options-qty");
+    let productCollection1inputs = document.querySelectorAll(".main-dish-options");
+    let productCollection2inputs = document.querySelectorAll(".side-dish-options");
     disableInputs(productCollection1inputs, productCollection1remaining);
     disableInputs(productCollection2inputs, productCollection2remaining);
 
     // Clear inputs if package quantity is reduced
-    if (tableInput.classList.contains("package-options-qty")) {
+    if (input.classList.contains("package-options")) {
       if (input.getAttribute('lastvalue') === input.value) {
         input.setAttribute('lastvalue', input.value);
       } else {
         console.log(input.value < input.getAttribute('lastvalue') ? 'decrement' : 'increment');
         if (input.value < input.getAttribute('lastvalue')) {
-          let productCollection1and2inputs = document.querySelectorAll(".table-inputs");
+          let productCollection1and2inputs = document.querySelectorAll(".main-dish-options, .side-dish-options");
           for (let input of productCollection1and2inputs) {
-            if (input.classList.contains('main-dish-options-qty') || input.classList.contains('side-dish-options-qty')) {
-              input.children[0].children[1].value = '';
-              input.removeAttribute('disabled');
-            }
+            input.value = '';
+            input.removeAttribute('disabled');
           }
         }
         if (input.value === '') {
@@ -630,10 +640,10 @@ window.onload = function () {
   }
 
   // Listen for click on inputs
-  let inputButtons = document.querySelectorAll('.js-qty__adjust');
+  let inputButtons = document.querySelectorAll('.btn-number');
   for (let i = 0; i < inputButtons.length; i++) {
     inputButtons[i].addEventListener('click', onChange, false);
-    inputButtons[i].parentNode.children[1].addEventListener('keyup', onChange, false);
+    inputButtons[i].parentNode.parentNode.children[1].addEventListener('keyup', onChange, false);
   }
 }
 
@@ -645,6 +655,32 @@ window.onload = function () {
 
 </script>
 
+
+<!-- Input Buttons -->
+<script>
+//plugin bootstrap minus and plus
+//http://jsfiddle.net/laelitenetwork/puJ6G/
+/*$( document ).ready(function() {
+  $('.btn-number').click(function(e){
+    e.preventDefault();
+    var fieldName = $(this).attr('data-field');
+    var type = $(this).attr('data-type');
+    var input = $("input[name='"+fieldName+"']");
+    var qty = parseInt(input.val().replace(/\D/g, '')));
+      if(type == 'minus') {
+        qty = qty - 1;
+      } else if (type == 'plus') {
+        var maxValue = parseInt(input.attr('max'));
+        if(!maxValue) maxValue = 9999999999999;
+        if(currentVal < maxValue) {
+          input.val(currentVal + 1).change();
+        }
+      }
+    }
+  });
+});*/
+
+</script>
 
 
 <!-- Modal Carousel Script -->
@@ -739,10 +775,10 @@ jQuery(function($) {
   $('.add-to-cart-order-form').click(function() {
     // Resetting.
     Shopify.itemsToAdd = [];
-    $('.js-qty__num').each(function() {
+    $('.input-number').each(function() {
       var quantity = parseInt($(this).val(), 10);
       if (quantity) {
-        Shopify.itemsToAdd.push( { id: $(this).parent().parent().attr('data-id'), quantity: quantity } );
+        Shopify.itemsToAdd.push( { id: $(this).attr('data-id'), quantity: quantity } );
       }
     });
     if (Shopify.itemsToAdd.length) {
