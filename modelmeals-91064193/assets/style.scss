@@ -80,7 +80,7 @@ $breakpoint-has-pull:  ('medium', 'medium-down', 'large');
 
 // Main Colors
 $colorPrimary: #000000;
-$colorSplash: #1391a4;
+$colorSplash: #d6c81f;
 
 // Text link colors
 $colorLink: $colorPrimary;
@@ -96,8 +96,8 @@ $colorBody: #ffffff;
 $colorBorder: #bebebe;
 
 // Account Bar
-$colorInfoBg: #000000;
-$colorInfoText: #ffffff;
+$colorInfoBg: #fdff00;
+$colorInfoText: #000000;
 
 // Nav and dropdown link background
 $colorNav: #ffffff;
@@ -239,9 +239,9 @@ $baseFontSize: 14px; // Henceforth known as 1em (assumed at 14px)
 // Accent (same logic) 
 
 
-$titleFontStack: "Oswald", "Helvetica Neue",Arial,sans-serif;
-$bodyFontStack: "PT Serif", "Big Caslon","Bodoni MT",Georgia,serif ;
-$accentFontStack: "Montserrat", "Helvetica Neue",Arial,sans-serif;
+$titleFontStack: "Montserrat", "Helvetica Neue",Arial,sans-serif;
+$bodyFontStack: "Arvo", "Big Caslon","Bodoni MT",Georgia,serif ;
+$accentFontStack: "Arvo", "Big Caslon","Bodoni MT",Georgia,serif ;
 
 .title{
   font-family: $titleFontStack;
@@ -269,11 +269,11 @@ $accentFontStack: "Montserrat", "Helvetica Neue",Arial,sans-serif;
 
 @font-face {
   font-family: 'icons';
-  src: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.eot?398237269549996996');
-  src: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.eot?398237269549996996#iefix') format("embedded-opentype"),
-       url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.woff?398237269549996996') format("woff"),
-       url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.ttf?398237269549996996') format("truetype"),
-       url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.svg?398237269549996996#timber-icons') format("svg");
+  src: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.eot?14997036252206963171');
+  src: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.eot?14997036252206963171#iefix') format("embedded-opentype"),
+       url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.woff?14997036252206963171') format("woff"),
+       url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.ttf?14997036252206963171') format("truetype"),
+       url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.svg?14997036252206963171#timber-icons') format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -1533,7 +1533,7 @@ select {
           appearance: none;
   background-position: right center;
   background: {
-    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/ico-select.svg?398237269549996996');
+    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/ico-select.svg?14997036252206963171');
     repeat: no-repeat;
     position: right 10px center;
     color: transparent;
@@ -1797,7 +1797,7 @@ label.error {
   width: 97px;
   height: 97px;
   background: {
-    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/play.svg?398237269549996996');
+    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/play.svg?14997036252206963171');
     repeat: no-repeat;
     position: center center;
     color: transparent;
@@ -1977,7 +1977,7 @@ $infoBarPadding: 5px;
 .header-logo {
   @extend .title;
   .logo-image{
-    max-height: (30px * 2);
+    max-height: (40px * 2);
   }
   text-align: left;
   margin: 0; 
@@ -2057,7 +2057,7 @@ $infoBarPadding: 5px;
     border-top-right-radius: $radius;
     border-bottom-right-radius: $radius;
     width: 23px;
-    background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/search.svg?398237269549996996");
+    background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/search.svg?14997036252206963171");
     background-repeat: no-repeat;
     background-position:  right 3px center;
     &:focus,
@@ -2194,11 +2194,11 @@ $infoBarPadding: 5px;
   }
   .header-hamburger{
     right: 0;
-    background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/nav.svg?398237269549996996") no-repeat left 0 center;
+    background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/nav.svg?14997036252206963171") no-repeat left 0 center;
   }
   .header-cart{
     left: 0;
-    background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/cart.svg?398237269549996996") no-repeat left 0 center;
+    background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/cart.svg?14997036252206963171") no-repeat left 0 center;
   }
   .header-cart__bubble{
     position: absolute;
@@ -2302,17 +2302,17 @@ $infoBarPadding: 5px;
 }
 /* ie8  icon replacement*/
 .lt-ie9 .nav--mobile .header-hamburger{
-  background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/nav.png?398237269549996996");
+  background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/nav.png?14997036252206963171");
   background-position: right center;
   background-repeat: no-repeat;
 }
 .lt-ie9 .nav--mobile .header-cart{
-  background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/cart.png?398237269549996996");
+  background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/cart.png?14997036252206963171");
   background-position: left center;
   background-repeat: no-repeat;
 }
 .lt-ie9 .header-search .search-bar{
-  background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/search.png?398237269549996996");
+  background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/search.png?14997036252206963171");
   background-position: right center;
   background-repeat: no-repeat;
 }
@@ -2392,8 +2392,8 @@ $infoBarPadding: 5px;
     li{ padding-top: $gutter/4; }
   }
   .header-menu > ul > li > a{
-    padding-top: 30px;
-    padding-bottom: 30px;
+    padding-top: 40px;
+    padding-bottom: 40px;
   }
 
   /*================ Large MegaNav ================*/
@@ -2737,7 +2737,7 @@ ul.homepage-logos__list{
     top: 0;
     left: 0;
     background-color: $colorSplash;
-    background-image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/homepage_lower_image.jpg?398237269549996996');
+    background-image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/homepage_lower_image.jpg?14997036252206963171');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -2828,7 +2828,7 @@ ul.homepage-logos__list{
 }
 .hero-image-overlay{
   background-color: $colorTextBody;
-  opacity: 0.15;
+  opacity: 0;
   position: absolute;
   top:0;
   bottom:0;
@@ -3928,7 +3928,7 @@ $borderSpacing: 10px;
   color: $colorTextBody;
   background-color: $colorSplash;
   @if $passwordPageUseBgImage {
-    background-image: url(//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/password-page-background.jpg?398237269549996996);
+    background-image: url(//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/password-page-background.jpg?14997036252206963171);
     background-size: cover;
     background-repeat: no-repeat;
     background-color: $colorTextBody;
@@ -4241,7 +4241,7 @@ $slick-opacity-not-active: 0.75 !default;
   right: 10px;
   position: absolute;
   background: {
-    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/arrow-right.svg?398237269549996996');
+    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/arrow-right.svg?14997036252206963171');
     repeat: no-repeat;
     position: center center;
     color: transparent;
@@ -4252,7 +4252,7 @@ $slick-opacity-not-active: 0.75 !default;
   left: 10px;
   position: absolute;
   background: {
-    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/arrow-left.svg?398237269549996996');
+    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/arrow-left.svg?14997036252206963171');
     repeat: no-repeat;
     position: center center;
     color: transparent;

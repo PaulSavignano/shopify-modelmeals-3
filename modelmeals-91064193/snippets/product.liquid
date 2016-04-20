@@ -72,12 +72,14 @@
 
           <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
 
-          <form action="{{ form_action }}" method="{{form_method}}" enctype="multipart/form-data" id="{{form_id}}" class="{{form_class}}">
+          <form action="{{ form_action }}" data-productid="{{product.id}}" method="{{form_method}}" enctype="multipart/form-data" id="{{form_id}}" class="{{form_class}}">
             {% if include_customer_id %}
               <input type="hidden" name="customer_id" value="{{customer.id}}"></input>
             {% endif %}
-
-            <select name="id" id="productSelect" class="product-single__variants">
+{% if product.available %} 
+			{% include 'subscription-product' %} 
+		{% endif %} 
+            <select name="id" data-productid="{{product.id}}" id="productSelect" class="product-single__variants">
               {% for variant in product.variants %}
                 {% if variant.available %}
 

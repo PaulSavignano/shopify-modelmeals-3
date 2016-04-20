@@ -80,6 +80,12 @@
 
       <p class="h5--body">{{ customer.name }}</p>
 
+{% if customer.metafields.subscriptions.customer_string %}
+<!--BeginRechargeCode-->
+<p><a href="/tools/recurring/customer/{{customer.metafields.subscriptions.customer_string}}/subscriptions/">Manage Subscriptions</a></p>
+<!--EndRechargeCode-->
+{% endif %}
+
       {% if customer.default_address != nil %}
         <p>
         {{ customer.default_address.address1 }}<br>

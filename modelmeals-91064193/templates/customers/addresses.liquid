@@ -1,3 +1,8 @@
+{% if customer.metafields.subscriptions.customer_string %}
+<!--BeginRechargeCode-->
+<p><a href="/tools/recurring/customer/{{customer.metafields.subscriptions.customer_string}}/subscriptions/">Edit your subscription address here</a></p>
+<!--EndRechargeCode-->
+{% endif %}
 <!-- /templates/customers/addressess.liquid -->
 {% comment %}
 
