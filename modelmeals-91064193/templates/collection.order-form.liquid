@@ -683,46 +683,38 @@ window.onload = function () {
 
     // handle keyup inputs
     if (event.type === 'keyup') {
-      console.log(event.keyCode);
-      if (input.classList.contains('main-dish-options')) {
-        if (input.value > productCollection1remaining) {
-          if (productCollection1remaining > input.max) {
+      function validate(input, remaining, display) {
+        if (input.value > remaining) {
+          if (remaining > input.max) {
             input.value = input.max;
-            productCollection1remaining -= input.value
+            remaining -= input.value
           } else if (input.value.length > 1) {
             console.log('length: ' + 1);
-            input.value = document.getElementById('display-main-dish-options').dataset.quantity;
-            productCollection1remaining -= input.value
+            input.value = display.dataset.quantity;
+            remaining -= input.value
           } else {
-            input.value = document.getElementById('display-main-dish-options').dataset.quantity;
-            productCollection1remaining -= input.value
+            input.value = display.dataset.quantity;
+            remaining -= input.value
           }
         } else if (input.value > input.max) {
           input.value = input.max;
-          productCollection1remaining -= input.value
+          remaining -= input.value
         }
       }
+
+      if (input.classList.contains('main-dish-options')) {
+        let display = document.getElementById('display-main-dish-options');
+        validate(input, productCollection1remaining, display);
+      }
+
       if (input.classList.contains('side-dish-options')) {
-        if (input.value > productCollection2remaining) {
-          if (productCollection2remaining > input.max) {
-            input.value = input.max;
-            productCollection2remaining -= input.value
-          } else if (input.value.length > 1) {
-            console.log('length: ' + 1);
-            input.value = document.getElementById('display-side-dish-options').dataset.quantity;
-            productCollection2remaining -= input.value
-          } else {
-            input.value = document.getElementById('display-side-dish-options').dataset.quantity;
-            productCollection2remaining -= input.value
-          }
-        } else if (input.value > input.max) {
-          input.value = input.max;
-          productCollection2remaining -= input.value
-        }
+        let display = document.getElementById('display-side-dish-options');
+        validate(input, productCollection2remaining, display);
       }
       display();
     }
 
+    // Set dataset for quantity and id to handle input values of length
     if (event.type === 'focus' || event.keyCode === 8) {
       let displayMainEl = document.getElementById('display-main-dish-options');
       let displaySideEl = document.getElementById('display-side-dish-options');
@@ -771,13 +763,8 @@ window.onload = function () {
   }
 }
 
-
-
-
-
-
-
 </script>
+
 
 
 <!-- Modal Carousel Script -->
@@ -843,9 +830,7 @@ $(".modal-description").click(function(){
 
 
 
-
-
-
+<!-- Add to cart -->
 <script>
 Shopify.itemsToAdd = [];
 Shopify.addItemstoTheCart = function() {
@@ -864,7 +849,6 @@ Shopify.addItemstoTheCart = function() {
   }
 }
 
-
 jQuery(function($) {
   $('table .quantity:first').focus();
   $('[max]').change(function() {
@@ -876,8 +860,7 @@ jQuery(function($) {
     }
   });
 
-
-
+  // Add products with quantity to array
   $('.add-to-cart-order-form').click(function() {
     Shopify.itemsToAdd = [];
     $('.input-number').each(function() {
@@ -911,9 +894,4 @@ jQuery(function($) {
     }
   });
 });
-</script>
-
-
-<script>
-
 </script>
