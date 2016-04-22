@@ -9,7 +9,7 @@
 }
 
 .input-group {float: right}
-input[type="text"][disabled] {
+input[type="number"][disabled] {
   background-color: rgba(0,0,0,0.1);
 }
 .qty-row {border-bottom: 0; }
@@ -508,7 +508,6 @@ function disableInputs(inputsClass, collectionRemaining) {
 
 // display selected dishes
 function displaySelected(collectionRemaining, display, collectionSelected) {
-  display.dataset.quantity = collectionRemaining;
   if (collectionRemaining > 0) {
     display.classList.remove("hidden");
     display.classList.add("show");
@@ -602,9 +601,6 @@ window.onload = function () {
     // Display Selected for Product Collection1
     let displayProductCollection1selected = document.getElementById('display-main-dish-options');
     productCollection1remaining = totalProductSelections - productCollection1selected;
-    if (productCollection1remaining <= 0) {
-      productCollection1remaining = 0;
-    }
     displaySelected(productCollection1remaining, displayProductCollection1selected, productCollection1selected);
 
     // Display Selected for Product Collection2
@@ -685,46 +681,56 @@ window.onload = function () {
       }
     }
 
-
     // handle keyup inputs
     if (event.type === 'keyup') {
+      console.log(event.keyCode);
       if (input.classList.contains('main-dish-options')) {
         if (input.value > productCollection1remaining) {
-          if (input.value > input.max) {
-            if (productCollection1remaining > input.max) {
-              console.log('1  input=' + input.value + ', remaining=' + productCollection1remaining + ', max=' + input.max + ', input > remaining, input > max:  input = max ' + input.max);
-              input.value = input.max;
-              display();
-              console.log('2  input=' + input.value + ', remaining=' + productCollection1remaining + ', max=' + input.max + ', input > remaining, input > max:  input = max ' + input.max);
-            } else {
-              console.log('1  input=' + input.value + ', remaining=' + productCollection1remaining + ', max=' + input.max + ', input > remaining, input > max:  input = remaining ' + productCollection1remaining);
-              input.value = productCollection1remaining;
-              display();
-              console.log('2  input=' + input.value + ', remaining=' + productCollection1remaining + ', max=' + input.max + ', input > remaining, input > max:  input = remaining ' + productCollection1remaining);
-            }
-          } else if (productCollection1remaining <= 0) {
-            display();
-            console.log('remaining0 1  input=' + input.value + ', remaining=' + productCollection1remaining + ', max=' + input.max + ', input > remaining, input < max:  input = remaining ' + productCollection1remaining);
-            input.value = productCollection1remaining;
-            display();
-            input.value = productCollection1remaining;
-            display();
-            console.log('remaining0 2  input=' + input.value + ', remaining=' + productCollection1remaining + ', max=' + input.max + ', input > remaining, input < max:  input = remaining ' + productCollection1remaining);
+          if (productCollection1remaining > input.max) {
+            input.value = input.max;
+            productCollection1remaining -= input.value
+          } else if (input.value.length > 1) {
+            console.log('length: ' + 1);
+            input.value = document.getElementById('display-main-dish-options').dataset.quantity;
+            productCollection1remaining -= input.value
           } else {
-            console.log('1  input=' + input.value + ', remaining=' + productCollection1remaining + ', max=' + input.max + ', input > remaining, input < max:  input = remaining ' + productCollection1remaining);
-            input.value = productCollection1remaining;
-            display();
-            console.log('2  input=' + input.value + ', remaining=' + productCollection1remaining + ', max=' + input.max + ', input > remaining, input < max:  input = remaining ' + productCollection1remaining);
+            input.value = document.getElementById('display-main-dish-options').dataset.quantity;
+            productCollection1remaining -= input.value
           }
         } else if (input.value > input.max) {
-          console.log('1  input=' + input.value + ', remaining=' + productCollection1remaining + ', max=' + input.max + ', input < remaining, input > max:  input = max ' + input.max);
           input.value = input.max;
-          display();
-          console.log('2  input=' + input.value + ', remaining=' + productCollection1remaining + ', max=' + input.max + ', input < remaining, input > max:  input = max ' + input.max);
+          productCollection1remaining -= input.value
         }
       }
+      if (input.classList.contains('side-dish-options')) {
+        if (input.value > productCollection2remaining) {
+          if (productCollection2remaining > input.max) {
+            input.value = input.max;
+            productCollection2remaining -= input.value
+          } else if (input.value.length > 1) {
+            console.log('length: ' + 1);
+            input.value = document.getElementById('display-side-dish-options').dataset.quantity;
+            productCollection2remaining -= input.value
+          } else {
+            input.value = document.getElementById('display-side-dish-options').dataset.quantity;
+            productCollection2remaining -= input.value
+          }
+        } else if (input.value > input.max) {
+          input.value = input.max;
+          productCollection2remaining -= input.value
+        }
+      }
+      display();
     }
 
+    if (event.type === 'focus' || event.keyCode === 8) {
+      let displayMainEl = document.getElementById('display-main-dish-options');
+      let displaySideEl = document.getElementById('display-side-dish-options');
+      displayMainEl.dataset.event = input.id;
+      displayMainEl.dataset.quantity = productCollection1remaining;
+      displaySideEl.dataset.event = input.id;
+      displaySideEl.dataset.quantity = productCollection2remaining;
+    }
 
     // Disable product collection empty inputs if max
     let productCollection1inputs = document.querySelectorAll(".main-dish-options");
@@ -759,7 +765,9 @@ window.onload = function () {
   let inputButtons = document.querySelectorAll('.btn-number');
   for (let i = 0; i < inputButtons.length; i++) {
     inputButtons[i].addEventListener('click', onChange, false);
+    inputButtons[i].addEventListener('focus', onChange, false);
     inputButtons[i].parentNode.parentNode.children[1].addEventListener('keyup', onChange, false);
+    inputButtons[i].parentNode.parentNode.children[1].addEventListener('focus', onChange, false);
   }
 }
 
@@ -903,4 +911,9 @@ jQuery(function($) {
     }
   });
 });
+</script>
+
+
+<script>
+
 </script>
