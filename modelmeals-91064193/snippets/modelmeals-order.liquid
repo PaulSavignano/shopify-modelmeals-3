@@ -1,4 +1,165 @@
+<div id="subscribed-order-form" style="display: none">
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal-gallery" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button class="close" type="button" data-dismiss="modal">×</button>
+          <h3 class="modal-title"></h3>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+          <button class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal End -->
+
+
+<div class="container">
+  <img class="center-block" src="//cdn.shopify.com/s/files/1/1182/1150/files/menu_fb348d82-a3a8-440a-8cbc-e61656153ac8_2048x2048.jpeg?16444708026538729962" alt="">
+</div>
+
+
+<!-- Package Options -->
+<div class="container">
+
+  <!-- if subscribed order -->
+  {% if template == 'page.order-subscribed' %}
+    {% if customer.metafields.subscriptions.customer_string %}
+      {% assign myArray = "main-dish-options|side-dish-options" | split: "|" %}
+      <div id="customer-metafields" data-metafields="{{ customer.metafields.subscriptions.customer_string }}" style="display: none"></div>
+      <table class="table">
+        <thead>
+          <tr class="qty-row">
+            <th colspan="4"><h1>SUBSCRIBED PACKAGES</h1></th>
+            <th class="collection-qt text-center"><div class="subscribed-td-qty">Qty</div></th>
+          </tr>
+        </thead>
+        <tbody id="subscribed-packages">
+        </tbody>
+      </table>
+    {% endif %}
+  {% else %}
+  <!-- if subscribed order end -->
+
+
+    {% assign myArray = "package-options|main-dish-options|side-dish-options|add-on-options" | split: "|" %}
+  {% endif %}
+  {% for myHandle in myArray %}
+    {% assign collection = collections[myHandle] %}
+    {% if collection.products_count > 0 %}
+      <table class="table">
+        <thead>
+          <tr class="qty-row">
+            <th colspan="2"><h1>{{ collection.title }}</h1></th>
+            {% if collection.handle == 'package-options' %}
+              <th colspan="2" class="price">Price</th>
+              <th class="collection-qty">Qty</th>
+            {% endif %}
+          </tr>
+          {% if collection.handle == 'main-dish-options' or collection.handle == 'side-dish-options' %}
+            <tr>
+              <th colspan="4" class="display" id="display-{{ collection.handle }}"></th>
+            </tr>
+          {% endif %}
+        </thead>
+        <tbody>
+          {% for product in collection.products %}
+            {% if product.available %}
+              {% for variant in product.variants %}
+                {% if variant.available %}
+                  <tr>
+                    {% if product.featured_image %}
+                      <td class="table-img">
+                        <a href="#image{{ product.id }}">
+                          <img src="{{ product.featured_image.src | product_img_url: 'thumb' }}" id="image{{ product.id }}" alt="{{ product.featured_image.alt | escape }}" class="modal-img" data-collection="{{ collection.id }}"/>
+                        </a>
+                      </td>
+                    {% endif %}
+                    <td colspan="{% if product.featured_image and product.price > 0 %}1{% elsif product.price > 0 %}2{% else %}4{% endif %}">
+                      <a href="#image{{ product.id }}" class="modal-description" data-title="{{ product.title }}" data-description="{{ product.description | strip_html }}">
+                       {{ product.title }}
+                      </a>
+                    </td>
+                    {% if product.price > 0 %}
+                      <td class="product-price" id="price{{ variant.id }}" colspan="{% if variant.metafields.subscriptions.discount_variant_id %}1{% else %}2{% endif %}">
+                        {{ product.price | money }}
+                      </td>
+                    {% endif %}
+                    {% if variant.metafields.subscriptions.discount_variant_id %}
+                      <td>
+                        <div class="subscribe-btn">
+                          <button type="button" class="btn btn-default subscribe" data-product="{{ product.id }}" data-variant="{{ variant.id }}" data-subscriptionvariant="{{ variant.metafields.subscriptions.discount_variant_id }}" data-regularprice="{{ product.price }}" data-subscriptionprice="{{ variant.metafields.subscriptions.discount_variant_price }}">Subscribe</button>
+                        </div>
+                      </td>
+                    {% endif %}
+                    <td class="table-inputs">
+                      <div class="input-group order-form-inputs">
+                        <span class="input-group-btn">
+                          <button type="button" class="btn btn-default btn-number" data-type="minus" data-field="{{ variant.id }}">
+                            <span class="glyphicon glyphicon-minus"></span>
+                          </button>
+                        </span>
+                        <input type="number" name="{{ variant.id }}" class="form-control input-number text-center {{ collection.handle }}" id="{{ variant.id }}" data-product="{{ product.title }}" data-id="{{ variant.id }}" data-subscribeid="{{ variant.metafields.subscriptions.discount_variant_id }}" value="">
+                        <span class="input-group-btn">
+                          <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="{{ variant.id }}">
+                            <span class="glyphicon glyphicon-plus"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- Image Repo -->
+                  <div class="hidden" id="img-repo{{ collection.id }}" name="{{ product.id }}">
+                    {% for image in product.images %}
+                      <div class="item" id="image{{ product.id }}">
+                        <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <!-- Image Repo End -->
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>There are no products in this view.</p>
+    {% endif %}
+  {% endfor %}
+
+
+  <!-- Add to cart -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="add-to-cart-button">
+        <button class="btn btn-block add-to-cart-order-form" id="add-to-cart-order-form" disabled/>ADD TO CART</button>
+      </div>
+    </div>
+  </div>
+  <!-- Add to cart end -->
+</div>
+<!-- Package Options End -->
+
+
+</div>
+
+
+
+
+<script>
 NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
+{% if template == 'page.order-packages' %}
+document.getElementById('subscribed-order-form').removeAttribute("style");
+{% endif %}
+
 document.addEventListener("DOMContentLoaded", function(event) {
 
 
@@ -325,69 +486,69 @@ document.addEventListener("DOMContentLoaded", function(event) {
     inputButtons[i].parentNode.parentNode.children[1].addEventListener('keyup', onChange, false);
     inputButtons[i].parentNode.parentNode.children[1].addEventListener('focus', onChange, false);
   }
-});
 
 
 
 
-// Modal Carousel Script
-$("#modal-carousel").carousel({interval:false});
 
-/* change modal title when slide changes */
-$("#modal-carousel").on("slid.bs.carousel", function () {
-  $(".modal-title").html($(this).find(".active img").attr("title"));
-});
+  // Modal Carousel Script
+  $("#modal-carousel").carousel({interval:false});
 
-/* click an image */
-$(".modal-img").click(function() {
-  var collection = this.dataset.collection;
-  var top_level_div = document.getElementById('img-repo' + collection);
-  var count = top_level_div.getElementsByTagName('div').length;
-  var body = $(".modal-body");
-  var title = $(".modal-title");
-  body.empty();
-  title.empty();
-  var addCarousel = '';
-  if (count > 1) {
-    addCarousel = $('<div id="modal-carousel" class="carousel">' +
-                      '<div class="carousel-inner"></div>' +
-                        '<a class="carousel-control left" href="#modal-carousel" data-slide="prev">' +
-                          '<i class="glyphicon glyphicon-chevron-left"></i>' +
-                        '</a>' +
-                        '<a class="carousel-control right" href="#modal-carousel" data-slide="next">' +
-                          '<i class="glyphicon glyphicon-chevron-right"></i>' +
-                        '</a>' +
-                      '</div>');
-  } else {
-    addCarousel = $('<div id="modal-carousel" class="carousel">' +
-                      '<div class="carousel-inner"></div>' +
-                      '</div>');
-  }
-  body.append(addCarousel);
-  var content = $(".carousel-inner");
-  var id = this.id;
-  var repo = $("#img-repo" + collection + " .item");
-  var repoCopy = repo.filter("#" + id).clone();
-  var active = repoCopy.first();
-  active.addClass("active");
-  title.html(active.find("img").attr("title"));
-  content.append(repoCopy);
-  $("#modal-gallery").modal("show");
-});
+  /* change modal title when slide changes */
+  $("#modal-carousel").on("slid.bs.carousel", function () {
+    $(".modal-title").html($(this).find(".active img").attr("title"));
+  });
 
-/* Click a product title */
-$(".modal-description").click(function(){
-    $(".modal-title").empty;
-    $(".modal-body").empty;
-    var title = $(this).data('title');
-    var description = $(this).data('description');
-    $(".modal-title").html(title);
-    $(".modal-body").html(description);
+  /* click an image */
+  $(".modal-img").click(function() {
+    var collection = this.dataset.collection;
+    var top_level_div = document.getElementById('img-repo' + collection);
+    var count = top_level_div.getElementsByTagName('div').length;
+    var body = $(".modal-body");
+    var title = $(".modal-title");
+    body.empty();
+    title.empty();
+    var addCarousel = '';
+    if (count > 1) {
+      addCarousel = $('<div id="modal-carousel" class="carousel">\
+                        <div class="carousel-inner"></div>\
+                          <a class="carousel-control left" href="#modal-carousel" data-slide="prev">\
+                            <i class="glyphicon glyphicon-chevron-left"></i>\
+                          </a>\
+                          <a class="carousel-control right" href="#modal-carousel" data-slide="next">\
+                            <i class="glyphicon glyphicon-chevron-right"></i>\
+                          </a>\
+                        </div>');
+    } else {
+      addCarousel = $('<div id="modal-carousel" class="carousel">\
+                        <div class="carousel-inner"></div>\
+                        </div>');
+    }
+    body.append(addCarousel);
+    var content = $(".carousel-inner");
+    var id = this.id;
+    var repo = $("#img-repo" + collection + " .item");
+    var repoCopy = repo.filter("#" + id).clone();
+    var active = repoCopy.first();
+    active.addClass("active");
+    title.html(active.find("img").attr("title"));
+    content.append(repoCopy);
     $("#modal-gallery").modal("show");
+  });
+
+  /* Click a product title */
+  $(".modal-description").click(function(){
+      $(".modal-title").empty;
+      $(".modal-body").empty;
+      var title = $(this).data('title');
+      var description = $(this).data('description');
+      $(".modal-title").html(title);
+      $(".modal-body").html(description);
+      $("#modal-gallery").modal("show");
+  });
+
+
 });
-
-
-
 
 
 
@@ -454,3 +615,5 @@ jQuery(function($) {
     }
   });
 });
+
+</script>

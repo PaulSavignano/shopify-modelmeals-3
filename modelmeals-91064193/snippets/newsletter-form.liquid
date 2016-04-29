@@ -12,7 +12,7 @@
 {% if settings.newsletter_form_action != blank %}
   <form action="{{ settings.newsletter_form_action }}" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" class="input-group newsletter-form">
     <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="EMAIL" id="mail" class="input-group-field" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off">
-    <span class="input-group-btn">
+    <span class="input-group-btn-mm">
       <input type="submit" class="btn uppercase" name="subscribe" id="subscribe" value="{{ 'general.newsletter_form.submit' | t }}">
     </span>
   </form>
@@ -29,10 +29,9 @@
     <input type="hidden" name="contact[accepts_marketing]" value="true">
     <div class="input-group newsletter-form">
       <input type="email" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" id="mail" class="input-group-field" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off" name="contact[email]" />
-      <span class="input-group-btn">
+      <span class="input-group-btn-mm">
         <input type="submit" class="btn uppercase" name="subscribe" id="subscribe" value="{{ 'general.newsletter_form.submit' | t }}">
       </span>
     </div>
   {% endform %}
 {% endif %}
-

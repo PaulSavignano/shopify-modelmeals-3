@@ -1,7 +1,7 @@
 @charset "UTF-8";
-/*============================================================================ 
+/*============================================================================
   ============= Pipeline theme is built on Timber 2.0.2 ======================
-  ============================================================================ 
+  ============================================================================
 
   Shopify Timber v2.0.2
   Copyright 2015 Shopify Inc.
@@ -230,13 +230,13 @@ $max: max-width;
 ==============================================================================*/
 $baseFontSize: 14px; // Henceforth known as 1em (assumed at 14px)
 
-// Title 
+// Title
 
 
-// Body (same logic) 
+// Body (same logic)
 
 
-// Accent (same logic) 
+// Accent (same logic)
 
 
 $titleFontStack: "Montserrat", "Helvetica Neue",Arial,sans-serif;
@@ -269,11 +269,11 @@ $accentFontStack: "Arvo", "Big Caslon","Bodoni MT",Georgia,serif ;
 
 @font-face {
   font-family: 'icons';
-  src: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.eot?14997036252206963171');
-  src: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.eot?14997036252206963171#iefix') format("embedded-opentype"),
-       url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.woff?14997036252206963171') format("woff"),
-       url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.ttf?14997036252206963171') format("truetype"),
-       url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.svg?14997036252206963171#timber-icons') format("svg");
+  src: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.eot?9616958543777035953');
+  src: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.eot?9616958543777035953#iefix') format("embedded-opentype"),
+       url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.woff?9616958543777035953') format("woff"),
+       url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.ttf?9616958543777035953') format("truetype"),
+       url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/icons.svg?9616958543777035953#timber-icons') format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -1533,7 +1533,7 @@ select {
           appearance: none;
   background-position: right center;
   background: {
-    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/ico-select.svg?14997036252206963171');
+    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/ico-select.svg?9616958543777035953');
     repeat: no-repeat;
     position: right 10px center;
     color: transparent;
@@ -1644,14 +1644,14 @@ label.error {
   display: table;
   border-collapse: separate;
   .input-group-field:first-child,
-  .input-group-btn:first-child,
-  .input-group-btn:first-child > .btn,
+  .input-group-btn-mm:first-child,
+  .input-group-btn-mm:first-child > .btn,
   input[type="hidden"]:first-child + .input-group-field,
-  input[type="hidden"]:first-child + .input-group-btn > .btn {
+  input[type="hidden"]:first-child + .input-group-btn-mm > .btn {
     border-radius: $radius 0 0 $radius;
   }
   .input-group-field:last-child,
-  .input-group-btn:last-child > .btn {
+  .input-group-btn-mm:last-child > .btn {
    border-radius: 0 $radius $radius 0;
   }
   input {
@@ -1665,7 +1665,7 @@ label.error {
   }
 }
 .input-group-field,
-.input-group-btn {
+.input-group-btn-mm {
   display: table-cell;
   vertical-align: middle;
   margin: 0;
@@ -1678,7 +1678,7 @@ label.error {
   width: 100%;
   margin-bottom: 0;
 }
-.input-group-btn {
+.input-group-btn-mm {
   position: relative;
   white-space: nowrap;
   width: 1%;
@@ -1797,7 +1797,7 @@ label.error {
   width: 97px;
   height: 97px;
   background: {
-    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/play.svg?14997036252206963171');
+    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/play.svg?9616958543777035953');
     repeat: no-repeat;
     position: center center;
     color: transparent;
@@ -1944,8 +1944,8 @@ $infoBarPadding: 5px;
     text-decoration: none;
   }
   a:visited,
-  a:focus, 
-  a:active, 
+  a:focus,
+  a:active,
   a:hover{
     color: rgba($colorInfoText, 0.9);
     text-decoration: underline;
@@ -1980,7 +1980,7 @@ $infoBarPadding: 5px;
     max-height: (40px * 2);
   }
   text-align: left;
-  margin: 0; 
+  margin: 0;
   a{
     text-decoration: none;
     color: $colorNavText;
@@ -1990,7 +1990,7 @@ $infoBarPadding: 5px;
     text-decoration: none;
     color: darken($colorNavText, 10%);
   }
-  a, 
+  a,
   img {
     display: block;
   }
@@ -2057,7 +2057,7 @@ $infoBarPadding: 5px;
     border-top-right-radius: $radius;
     border-bottom-right-radius: $radius;
     width: 23px;
-    background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/search.svg?14997036252206963171");
+    background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/search.svg?9616958543777035953");
     background-repeat: no-repeat;
     background-position:  right 3px center;
     &:focus,
@@ -2095,8 +2095,8 @@ $infoBarPadding: 5px;
     margin: 0;
     display: block;
   }
-  a { 
-    text-decoration: none; 
+  a {
+    text-decoration: none;
     color: $colorNavText;
     &:hover,
     &:active,
@@ -2183,7 +2183,7 @@ $infoBarPadding: 5px;
   .mobile-wrapper{
     @include clearfix;
     position: relative;
-  } 
+  }
   .header-hamburger,
   .header-cart{
     position: absolute;
@@ -2194,11 +2194,11 @@ $infoBarPadding: 5px;
   }
   .header-hamburger{
     right: 0;
-    background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/nav.svg?14997036252206963171") no-repeat left 0 center;
+    background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/nav.svg?9616958543777035953") no-repeat left 0 center;
   }
   .header-cart{
     left: 0;
-    background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/cart.svg?14997036252206963171") no-repeat left 0 center;
+    background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/cart.svg?9616958543777035953") no-repeat left 0 center;
   }
   .header-cart__bubble{
     position: absolute;
@@ -2212,13 +2212,13 @@ $infoBarPadding: 5px;
     color: transparent;
   }
   .header-menu,
-  .main-menu-dropdown{ 
-    display: none; 
+  .main-menu-dropdown{
+    display: none;
   }
-  .grandparent.main-menu--expanded > .main-menu-dropdown, 
+  .grandparent.main-menu--expanded > .main-menu-dropdown,
   .parent.main-menu--expanded > .main-menu-dropdown,
   .header-menu.main-menu--expanded{
-    display: block; 
+    display: block;
   }
   .main-menu--expanded > a{
     color: $colorSplash;
@@ -2246,8 +2246,8 @@ $infoBarPadding: 5px;
     padding-top: $gutter/2;
     padding-bottom: $gutter/2;
   }
-  .main-menu > li > a, 
-  .grandparent > .main-menu-dropdown > ul > .parent > a, 
+  .main-menu > li > a,
+  .grandparent > .main-menu-dropdown > ul > .parent > a,
   .grandparent > .main-menu-dropdown > ul > .child > a{
     @include uppercase();
   }
@@ -2258,7 +2258,7 @@ $infoBarPadding: 5px;
     }
     &.main-menu--expanded{
       border-bottom: none;
-    }  
+    }
   }
   .main-menu-dropdown ul{
     margin-left: $gutter/2;
@@ -2302,17 +2302,17 @@ $infoBarPadding: 5px;
 }
 /* ie8  icon replacement*/
 .lt-ie9 .nav--mobile .header-hamburger{
-  background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/nav.png?14997036252206963171");
+  background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/nav.png?9616958543777035953");
   background-position: right center;
   background-repeat: no-repeat;
 }
 .lt-ie9 .nav--mobile .header-cart{
-  background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/cart.png?14997036252206963171");
+  background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/cart.png?9616958543777035953");
   background-position: left center;
   background-repeat: no-repeat;
 }
 .lt-ie9 .header-search .search-bar{
-  background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/search.png?14997036252206963171");
+  background: url("//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/search.png?9616958543777035953");
   background-position: right center;
   background-repeat: no-repeat;
 }
@@ -2362,7 +2362,7 @@ $infoBarPadding: 5px;
     display: table-cell;
     vertical-align: middle;
   }
-  .header-hamburger, 
+  .header-hamburger,
   .nav-carat,
   .header-cart__bubble{
     display: none !important;
@@ -2427,13 +2427,13 @@ $infoBarPadding: 5px;
   .meganav_image{
     vertical-align:top;
     @include box-sizing();
-    img{ 
-      max-width: 100%; 
+    img{
+      max-width: 100%;
       max-height: 500px;
     }
   }
   /* catch the cast where a grandparent has a child */
-  .grandparent > .main-menu-dropdown > ul > .parent, 
+  .grandparent > .main-menu-dropdown > ul > .parent,
   .grandparent > .main-menu-dropdown > ul > .child{
     float: left;
     min-height: 1px;
@@ -2454,7 +2454,7 @@ $infoBarPadding: 5px;
     }
   }
   .kids-3.grandparent > .main-menu-dropdown > ul > li,
-  .kids-6.grandparent > .main-menu-dropdown > ul > li, 
+  .kids-6.grandparent > .main-menu-dropdown > ul > li,
   .kids-9.grandparent > .main-menu-dropdown > ul > li{
     width: 33.333%;
     &:nth-child(3n+1){
@@ -2462,7 +2462,7 @@ $infoBarPadding: 5px;
     }
   }
   .kids-4.grandparent > .main-menu-dropdown > ul > li,
-  .kids-7.grandparent > .main-menu-dropdown > ul > li, 
+  .kids-7.grandparent > .main-menu-dropdown > ul > li,
   .kids-8.grandparent > .main-menu-dropdown > ul > li{
     width: 25%;
     &:nth-child(4n+1){
@@ -2580,14 +2580,14 @@ $infoBarPadding: 5px;
 .homepage-product .product-page{
   background-color: transparent;
 }
-.homepage--splash, 
+.homepage--splash,
 .homepage--dark{
   color: #fff;
   .on-sale,
   .figcaption a,
-  .js-qty__adjust, 
+  .js-qty__adjust,
   .ajaxcart__qty-adjust,
-  .js-qty input[type="text"], 
+  .js-qty input[type="text"],
   .figcaption a .price_wrapper,
   .ajaxcart__qty input[type="text"],
   input, textarea, button, select{
@@ -2595,7 +2595,7 @@ $infoBarPadding: 5px;
   }
   .on-sale .compare-at{
     color: rgba(#fff, 0.5);
-  }  
+  }
   .btn--clear{
     color: white;
     border: 1px solid white;
@@ -2621,8 +2621,8 @@ $infoBarPadding: 5px;
 
 /*================ Page ================*/
 .homepage-page{
-  hr{ 
-    width: 75%; 
+  hr{
+    width: 75%;
     margin-left: 12%;
   }
 }
@@ -2671,8 +2671,8 @@ ul.homepage-logos__list{
     padding-left: 5px;
     margin-bottom: 5px;
   }
-  a{ 
-    position: relative;    
+  a{
+    position: relative;
     color: white;
     text-align: center;
     font-size: 2em;
@@ -2713,7 +2713,7 @@ ul.homepage-logos__list{
   @include at-query($min, $small){ margin: $gutter*8 auto; }
   @include at-query($max, $small){ margin: $gutter*4 auto; }
   display: inline-block;
-  background-color: $colorBody; 
+  background-color: $colorBody;
   padding: 0;
   &:hover{
     color: $colorSplash;
@@ -2737,7 +2737,7 @@ ul.homepage-logos__list{
     top: 0;
     left: 0;
     background-color: $colorSplash;
-    background-image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/homepage_lower_image.jpg?14997036252206963171');
+    background-image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/homepage_lower_image.jpg?9616958543777035953');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -2762,7 +2762,7 @@ ul.homepage-logos__list{
   overflow: hidden;
   background-color: #fff;
 }
-.homepage-hero-video, 
+.homepage-hero-video,
 .homepage-hero-image{
   display: block;
   background-size: cover;
@@ -2888,8 +2888,8 @@ ul.homepage-logos__list{
     height: 100%;
     border-radius: 50%;
     content: '';
-    -webkit-box-sizing: content-box; 
-    -moz-box-sizing: content-box; 
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
     box-sizing: content-box;
   }
   .scroll_icon:before {
@@ -2931,9 +2931,9 @@ ul.homepage-logos__list{
   color: $colorFooterText;
   text-align: left;
   hr {
-    border-top: 1px solid rgba($colorFooterText, 0.5); 
+    border-top: 1px solid rgba($colorFooterText, 0.5);
   }
-  a{ 
+  a{
     color: $colorFooterText;
     &:hover{
       color: rgba($colorFooterText, 0.9);
@@ -2943,9 +2943,9 @@ ul.homepage-logos__list{
 .footer-logo{
   position: absolute;
   left: 50%;
-  img { 
-    max-width: 120px; 
-    max-height: 80px; 
+  img {
+    max-width: 120px;
+    max-height: 80px;
   }
 }
 .footer-logo img{
@@ -2959,17 +2959,17 @@ ul.homepage-logos__list{
 .lt-ie9 .site-footer{
   border-top: $gutter*2 solid $colorFooterBg;
 }
-.footer-quicklinks li{ 
-  margin: 0 0 $gutter/2 0; 
+.footer-quicklinks li{
+  margin: 0 0 $gutter/2 0;
 }
 
 .footer-secondary,
 .footer-quicklinks{
   @include uppercase();
   a{
-    text-decoration: none; 
+    text-decoration: none;
     &:hover,
-    &:active, 
+    &:active,
     &:focus{
       text-decoration: underline;
     }
@@ -2982,21 +2982,21 @@ ul.homepage-logos__list{
 }
 .footer-secondary{
   margin-bottom: 0;
-} 
-.footer-social, 
+}
+.footer-social,
 .footer-payment{
   @include uppercase();
   margin-bottom: 0px;
   display: inline-block;
-  a{ 
-    text-decoration: none; 
+  a{
+    text-decoration: none;
   }
   @include at-query ($max, $large) {
     margin: $gutter 0 0 0;
     text-align: center;
-    li{ 
+    li{
       line-height: 2.5em;
-      margin: 0 $gutter/2; 
+      margin: 0 $gutter/2;
     }
   }
 }
@@ -3016,14 +3016,14 @@ ul.homepage-logos__list{
   background-color: $colorBody;
   input{
     border: none;
-    &:active, 
+    &:active,
     &:focus{
       border:none;
       box-shadow: none;
     }
   }
 }
-.input-group.newsletter-form .input-group-btn .btn{
+.input-group.newsletter-form .input-group-btn-mm .btn{
   border-radius: $radius;
 }
 
@@ -3086,8 +3086,8 @@ a .price_wrapper{
   text-align: center;
 }
 
-.product-grid-item .figcaption.hover .price_wrapper p, 
-.product-grid-item .figcaption.hover .name_wrapper p { 
+.product-grid-item .figcaption.hover .price_wrapper p,
+.product-grid-item .figcaption.hover .name_wrapper p {
   margin-bottom: $gutter/4;
 }
 @include at-query ($max, $large) {
@@ -3098,8 +3098,8 @@ a .price_wrapper{
 }
 
 @include at-query ($min, $large) {
-  .product-grid-item .figcaption.hover .price_wrapper p, 
-  .product-grid-item .figcaption.hover .name_wrapper p{ 
+  .product-grid-item .figcaption.hover .price_wrapper p,
+  .product-grid-item .figcaption.hover .name_wrapper p{
     margin-bottom: $gutter/4;
   }
   .product-grid-item .figcaption.hover{
@@ -3164,19 +3164,19 @@ $double-xl: 1120px;
 /* Small */
 @include at-query($max, $small) {
   .small--one-whole
-  .medium--one-whole, 
+  .medium--one-whole,
   .medium--one-half,
   .medium--one-third,
   .medium--one-quarter,
   .medium--one-fifth,
   .medium--one-sixth,
-  .large--one-whole, 
+  .large--one-whole,
   .large--one-half,
   .large--one-third,
   .large--one-quarter,
   .large--one-fifth,
   .large--one-sixth,
-  .one-whole, 
+  .one-whole,
   .one-half,
   .one-third,
   .one-quarter,
@@ -3206,7 +3206,7 @@ $double-xl: 1120px;
 
 /* Medium */
 @media only screen and (min-width: ($small + 1px) ) and (max-width: ($medium) ){
-  .medium--one-whole .grid__image, 
+  .medium--one-whole .grid__image,
           .one-whole .grid__image{
     height: $small - $gutter;
   }
@@ -3234,7 +3234,7 @@ $double-xl: 1120px;
 
 /* Large */
 @media only screen and (min-width: ($medium + 1px) ) and (max-width: ($xl) ){
-  .large--one-whole .grid__image, 
+  .large--one-whole .grid__image,
           .one-whole .grid__image {
     height: $medium - $gutter;
   }
@@ -3262,7 +3262,7 @@ $double-xl: 1120px;
 
 /* XL */
 @include at-query($min, $xl) {
-  .large--one-whole .grid__image, 
+  .large--one-whole .grid__image,
           .one-whole .grid__image {
     height: $xl - $gutter;
   }
@@ -3290,7 +3290,7 @@ $double-xl: 1120px;
 
 /* Double XL */
 @include at-query($min, $double-xl) {
-  .large--one-whole .grid__image, 
+  .large--one-whole .grid__image,
           .one-whole .grid__image {
     height: $double-xl - $gutter;
   }
@@ -3342,7 +3342,7 @@ $double-xl: 1120px;
   }
 }
 
-.collection-title{ 
+.collection-title{
   padding-top: $gutter*2;
 }
 
@@ -3374,11 +3374,11 @@ $borderSpacing: 10px;
   & > li{
     margin-bottom: $gutter/3;
     padding: 0px;
-    a{ 
+    a{
       @extend .uppercase;
-      padding-left: $gutter/3; 
+      padding-left: $gutter/3;
       margin-left: ($borderSpacing + $borderThickness) * -1;
-      text-decoration: none; 
+      text-decoration: none;
       border-left: $borderThickness solid transparent;
       &:hover{
         border-left: $borderThickness solid $colorSplash;
@@ -3576,9 +3576,9 @@ $borderSpacing: 10px;
     z-index: -1;
     top: 0;
     left: 0;
-    background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%); 
-    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%); 
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%); 
+    background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%);
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#a6000000',GradientType=0 );
   }
 }
@@ -3631,7 +3631,7 @@ $borderSpacing: 10px;
   }
 }
 
-.banner, 
+.banner,
 .blog__article .btn--full{
   margin-left: $gutter * -1;
   width: calc(100% + 60px);
@@ -3928,7 +3928,7 @@ $borderSpacing: 10px;
   color: $colorTextBody;
   background-color: $colorSplash;
   @if $passwordPageUseBgImage {
-    background-image: url(//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/password-page-background.jpg?14997036252206963171);
+    background-image: url(//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/password-page-background.jpg?9616958543777035953);
     background-size: cover;
     background-repeat: no-repeat;
     background-color: $colorTextBody;
@@ -3983,7 +3983,7 @@ $borderSpacing: 10px;
   @include title();
   font-size: em(42px);
   line-height: 1.15;
-  letter-spacing: 0;  
+  letter-spacing: 0;
   text-rendering: optimizeLegibility;
   padding-bottom: $gutter;
   padding-top: $gutter;
@@ -4241,7 +4241,7 @@ $slick-opacity-not-active: 0.75 !default;
   right: 10px;
   position: absolute;
   background: {
-    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/arrow-right.svg?14997036252206963171');
+    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/arrow-right.svg?9616958543777035953');
     repeat: no-repeat;
     position: center center;
     color: transparent;
@@ -4252,7 +4252,7 @@ $slick-opacity-not-active: 0.75 !default;
   left: 10px;
   position: absolute;
   background: {
-    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/arrow-left.svg?14997036252206963171');
+    image: url('//cdn.shopify.com/s/files/1/1182/1150/t/2/assets/arrow-left.svg?9616958543777035953');
     repeat: no-repeat;
     position: center center;
     color: transparent;

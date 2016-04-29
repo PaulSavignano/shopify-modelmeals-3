@@ -1,0 +1,67 @@
+
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {
+    vertical-align: middle;
+    border-right:0;
+    border-left: 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.input-group {float: right}
+input[type="number"][disabled] {
+  background-color: rgba(0,0,0,0.1);
+}
+.qty-row {border-bottom: 0; }
+.table>thead>tr>th {border: 0}
+.table>thead>tr>th>h1 {margin-bottom: 0}
+.table>thead>tr>th.price {padding-left: 80px}
+h4#display-main-options-qty {margin-top: 0}
+.table>thead>tr>th.caption {padding-top: 0}
+#main-dish-table {border-top: none}
+.display-qty {font-size: 16px}
+.table>thead>tr>th.collection-qty {text-align: right; padding-right: 72px;}
+.table-inputs {text-align: right;}
+input[type="number"], select {display: inline;}
+a {color: black}
+.table-img {width: 80px}
+.quantity { text-align: center; width: 60px !important; margin: 0 !important; }
+.thumbnail {margin-bottom:6px;}
+
+.carousel-control.left,.carousel-control.right{
+  background-image:none;
+  margin-top:10%;
+  width:5%;
+}
+
+.add-to-cart-order-form:hover {
+  color: white;
+}
+.add-to-cart-button {
+  float: right;
+  width: 144px;
+  margin-right: 8px;
+}
+.form-control {height: 37px;}
+.order-form-inputs {width: 144px}
+.product-price {
+  text-align: center;
+  width: 90.1563px;
+}
+.subscribe.btn-secondary {
+  color: black;
+  background-color: white;
+  border-color: black;
+}
+.subscribe-btn {
+  width: 110px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.subscribed-td-qty {
+  width: 144px;
+  height: 54px;
+}
