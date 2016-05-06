@@ -55,13 +55,13 @@
 
             <div class="grid__item large--one-half">
               <div class="grid--full cart__row--table-large">
-                <!-- Remove cart images
+
                 <div class="grid__item one-third">
                   <a href="{{ item.url | within: collections.all }}" class="cart__image">
                     <img src="{{ item | img_url: 'small' }}" alt="{{ item.title | escape }}">
                   </a>
                 </div>
-                Remove cart images end -->
+
                 <div class="grid__item cart__item__title">
                   <a href="{{ item.url }}" class="h4--body">
                     {{ item.product.title }}
@@ -93,10 +93,12 @@
                       {% endunless %}
                     {% endfor %}
                   {% endif %}
+
                   <!-- Remove remove button
                   <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="cart__remove uppercase lighten" data-id="{{ item.id }}">
                     <small>{{ 'cart.general.remove' | t }}</small>
                   </a> -->
+
                 </div>
 
               </div>
@@ -117,10 +119,12 @@
                     {% comment %}
                       Added data-id for the ajax cart implementation only.
                     {% endcomment %}
+
                     <!-- hide input and display with span -->
-                      <input class="cart__quantity-selector hidden" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0">
-                    <!-- hide input and display with span end -->
+                    <input class="cart__quantity-selector hidden" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0">
                     <span class="h3--body cart__quantity-selector">{{ item.quantity | t }}</span>
+                    <!-- hide input and display with span end -->
+
                   </div>
                 {% else %}
                   <div class="grid__item two-thirds"></div>
