@@ -33,7 +33,7 @@
       {% assign collection = collections[myHandle] %}
       {% if collection.products_count > 0 %}
 
-        <div class="cart__row medium-down--hide cart__header-labels {% if forloop.first == true %}{% else %}order-margin{% endif %}">
+        <div class="cart__row medium-down cart__header-labels {% if forloop.first == true %}{% else %}order-header{% endif %}">
           <div class="grid--full">
             <div class="grid__item large--one-half">
               <div class="grid--full">
@@ -42,10 +42,10 @@
             </div>
             <div class="grid__item large--one-half">
               <div class="grid--full">
-                <div class="grid__item one-half medium-down--one-half">
+                <div class="grid__item one-half medium-down--hide price">
                   Price
                 </div>
-                <div class="grid__item one-half medium-down--one-half text-right">
+                <div class="grid__item one-half medium-down--hide text-right quantity">
                   Quantity
                 </div>
               </div>
@@ -63,7 +63,7 @@
 
                     <div class="grid__item large--one-half">
                       <div class="grid--full cart__row--table-large">
-                        <div class="grid__item one-third">
+                        <div class="grid__item one-quarter">
                           <a href="#image{{ product.id }}" class="cart__image">
                             <img
                               src="{{ product.featured_image.src | product_img_url: 'thumb' }}"
@@ -74,7 +74,7 @@
                             />
                           </a>
                         </div>
-                        <div class="grid__item two-thirds cart__item__title">
+                        <div class="grid__item three-quarters cart__item__title">
                           <a
                             href="#image{{ product.id }}"
                             class="h4--body modal-description"
@@ -180,8 +180,8 @@
 
   <!-- Add to cart -->
   <div class="cart__row">
-    <div class="grid__item text-right">
-      <span><input class="btn uppercase btn--large checkout__button add-to-cart-order-form" id="add-to-cart-order-form" value="ADD TO CART"></span>
+    <div class="grid__item large--one-sixth medium-down--one-whole add-to-cart">
+      <input class="btn btn--full btn--large add-to-cart-order-form" id="add-to-cart-order-form" value="ADD TO CART">
     </div>
   </div>
   <!-- Add to cart end -->
@@ -193,4 +193,4 @@
 
 
 
-{{ 'modelmeals2.js' | asset_url | script_tag }}
+{{ 'modelmeals3.js' | asset_url | script_tag }}

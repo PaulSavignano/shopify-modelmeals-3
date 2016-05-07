@@ -25,12 +25,6 @@ input[type="number"], select {
   width:5%;
 }
 
-.add-to-cart-button {
-  float: right;
-  width: 144px;
-  margin-right: 8px;
-}
-
 .form-control {
   height: 37px;
 }
@@ -55,8 +49,12 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-.order-margin {
-  margin-top: 30px;
+.grid__item.one-half.medium-down--hide.price {
+  padding-left: 60px;
+}
+
+.grid__item.one-half.medium-down--hide.text-right.quantity {
+  padding-right: 40px;
 }
 
 
@@ -129,4 +127,11 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .hidden-count{
   display: none;
+}
+.order-header {
+  padding-top: 90px;
+}
+.add-to-cart {
+  float: right;
+  padding-left: 0;
 }
