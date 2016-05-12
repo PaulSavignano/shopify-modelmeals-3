@@ -1,33 +1,7 @@
-<!-- Modal -->
-<div class="modal fade" id="modal-gallery" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-          <button class="close" type="button" data-dismiss="modal">×</button>
-          <h3 class="modal-title"></h3>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-          <button class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Modal End -->
-
-
-
-
 <!-- Check if order page or order-packages page -->
-{% if template == 'page.order' %}
-  {% assign myArray = "main-dish-options|side-dish-options|add-on-options" | split: "|" %}
-{% elsif template == 'page.order-packages' %}
-  {% assign myArray = "package-options" | split: "|" %}
-{% endif %}
+{% include "modelmeals-menu" %}
 
-
-
-<div class="wrapper page-margin">
+<div class="wrapper page-margin hidden" id="order-form-wrapper">
   <div class="cart__body">
     {% for myHandle in myArray %}
       {% assign collection = collections[myHandle] %}
@@ -61,37 +35,64 @@
                   <div class="grid--full cart__row--table-large">
 
 
-                    <div class="grid__item large--one-half">
-                      <div class="grid--full cart__row--table-large">
-                        <div class="grid__item one-quarter">
-                          <a href="#image{{ product.id }}" class="cart__image">
-                            <img
-                              src="{{ product.featured_image.src | product_img_url: 'thumb' }}"
-                              id="image{{ product.id }}"
-                              alt="{{ product.featured_image.alt | escape }}"
+                    {% if product.featured_image %}
+                      <div class="grid__item large--one-half">
+                        <div class="grid--full cart__row--table-large">
+                          <div class="grid__item one-quarter">
+                            <a
+                              href="#"
                               class="modal-img"
-                              data-collectionid="{{ collection.id }}"
-                            />
-                          </a>
-                        </div>
-                        <div class="grid__item three-quarters cart__item__title">
-                          <a
-                            href="#image{{ product.id }}"
-                            class="h4--body modal-description"
-                            data-title="{{ product.title }}"
-                            data-description="{{ product.description | strip_html }}"
-                          >
-                            {{ product.title }}
-                            {% unless variant.title contains 'Default' %}
-                              - {{ variant.title }}
-                            {% endunless %}
-                            {% unless variant.sku == '' %}
-                              - {{ variant.sku }}
-                            {% endunless %}
-                          </a>
+                              data-toggle="modal"
+                              data-target="#mm-modal"
+                              data-productid="{{ product.id }}"
+                            >
+                              <img src="{{ product.featured_image.src | product_img_url: 'small' }}" alt="{{ product.featured_image.alt | escape }}"/>
+                            </a>
+                          </div>
+                          <div class="grid__item three-quarters cart__item__title">
+                            <a
+                              href="#"
+                              class="h4--body modal-description"
+                              data-toggle="modal"
+                              data-target="#mm-modal"
+                              data-title="{{ product.title }}"
+                              data-description="{{ product.description | strip_html }}"
+                            >
+                              {{ product.title }}
+                              {% unless variant.title contains 'Default' %}
+                                - {{ variant.title }}
+                              {% endunless %}
+                              {% unless variant.sku == '' %}
+                                - {{ variant.sku }}
+                              {% endunless %}
+                            </a>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    {% else %}
+                      <div class="grid__item large--one-half">
+                        <div class="grid--full cart__row--table-large">
+                          <div class="grid__item cart__item__title">
+                            <a
+                              href="#"
+                              class="h4--body modal-description"
+                              data-toggle="modal"
+                              data-target="#mm-modal"
+                              data-title="{{ product.title }}"
+                              data-description="{{ product.description | strip_html }}"
+                            >
+                              {{ product.title }}
+                              {% unless variant.title contains 'Default' %}
+                                - {{ variant.title }}
+                              {% endunless %}
+                              {% unless variant.sku == '' %}
+                                - {{ variant.sku }}
+                              {% endunless %}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
 
 
                     <div class="grid__item large--one-half">
@@ -99,22 +100,25 @@
 
                         <div class="grid__item one-half text-left">
                           <span class="cart__mini-labels">{{ 'cart.label.price' | t }}</span>
-                          <span class="h3--body money">{{ product.price | money }}</span>
-                          <span class="subscribe-btn">
-                            <button
-                              type="button"
-                              class="btn btn-default subscribe"
-                              data-product="{{ product.id }}"
-                              data-variant="{{ variant.id }}"
-                              data-subscriptionvariant="{{ variant.metafields.subscriptions.discount_variant_id }}"
-                              data-regularprice="{{ product.price }}"
-                              data-subscriptionprice="{{ variant.metafields.subscriptions.discount_variant_price }}"
-                            >Subscribe</button>
-                          </span>
+                          <span class="h3--body money" id="price{{ variant.id }}">{{ product.price | money }}</span>
+                          {% if variant.metafields.subscriptions.discount_variant_id %}
+                            <span class="subscribe-btn">
+                              <button
+                                type="button"
+                                class="btn btn-default subscribe"
+                                data-product="{{ product.id }}"
+                                data-variant="{{ variant.id }}"
+                                data-subscriptionvariant="{{ variant.metafields.subscriptions.discount_variant_id }}"
+                                data-regularprice="{{ product.price }}"
+                                data-subscriptionprice="{{ variant.metafields.subscriptions.discount_variant_price }}"
+                              >Subscribe</button>
+                            </span>
+                          {% endif %}
                         </div>
 
                         <div class="grid__item one-half text-right">
                           <span class="cart__mini-labels">{{ 'cart.label.quantity' | t }}</span>
+
                           <div class="input-group order-form-inputs">
                             <span class="input-group-btn">
                               <button type="button" class="btn btn-default btn-number" data-type="minus" data-field="{{ variant.id }}">
@@ -149,6 +153,7 @@
                               </button>
                             </span>
                           </div>
+
                         </div>
 
 
@@ -158,7 +163,7 @@
                 </div>
 
                 <!-- Image Repo -->
-                <div class="hidden" id="img-repo{{ collection.id }}" name="{{ product.id }}">
+                <div class="hidden" id="img-repo{{ product.id }}">
                   {% for image in product.images %}
                     <div class="item" id="image{{ product.id }}">
                       <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
@@ -191,6 +196,6 @@
 
 
 
-
-
-{{ 'modelmeals3.js' | asset_url | script_tag }}
+{% include "modelmeals-modal" %}
+{{ 'modelmeals-input-buttons.js' | asset_url | script_tag }}
+{{ 'modelmeals-order-form.js' | asset_url | script_tag }}

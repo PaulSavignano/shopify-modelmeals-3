@@ -56,14 +56,31 @@
             <div class="grid__item large--one-half">
               <div class="grid--full cart__row--table-large">
 
+                {% if item.image %}
                 <div class="grid__item one-third">
-                  <a href="{{ item.url | within: collections.all }}" class="cart__image">
+                  <a
+                    href="#"
+                    class="cart__image modal-img"
+                    data-toggle="modal"
+                    data-target="#mm-modal"
+                    data-productid="{{ item.product_id }}"
+                  >
                     <img src="{{ item | img_url: 'small' }}" alt="{{ item.title | escape }}">
                   </a>
                 </div>
 
+                <div class="grid__item two-thirds cart__item__title">
+                {% else %}
                 <div class="grid__item cart__item__title">
-                  <a href="{{ item.url }}" class="h4--body">
+                {% endif %}
+                  <a
+                    href="#"
+                    class="h4--body modal-description"
+                    data-toggle="modal"
+                    data-target="#mm-modal"
+                    data-title="{{ item.title }}"
+                    data-description="{{ item.product.description | strip_html }}"
+                  >
                     {{ item.product.title }}
                   </a>
                   {% unless item.variant.title contains 'Default' %}
@@ -94,11 +111,9 @@
                     {% endfor %}
                   {% endif %}
 
-                  <!-- Remove remove button
                   <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="cart__remove uppercase lighten" data-id="{{ item.id }}">
                     <small>{{ 'cart.general.remove' | t }}</small>
-                  </a> -->
-
+                  </a>
                 </div>
 
               </div>
@@ -107,12 +122,10 @@
             <div class="grid__item large--one-half">
               <div class="grid--full cart__row--table-large">
                 {% if settings.product_quantity %}
-                    <div class="grid__item one-third text-left">
-                      {% if item.price > 0 %}
-                        <span class="cart__mini-labels">{{ 'cart.label.price' | t }}</span>
-                        <span class="h3--body money">{{ item.price | money }}</span>
-                      {% endif %}
-                    </div>
+                  <div class="grid__item one-third text-left">
+                    <span class="cart__mini-labels">{{ 'cart.label.price' | t }}</span>
+                    <span class="h3--body money">{{ item.price | money }}</span>
+                  </div>
 
                   <div class="grid__item one-third text-center">
                     <span class="cart__mini-labels">{{ 'cart.label.quantity' | t }}</span>
@@ -120,10 +133,23 @@
                       Added data-id for the ajax cart implementation only.
                     {% endcomment %}
 
-                    <!-- hide input and display with span -->
-                    <input class="cart__quantity-selector hidden" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0">
-                    <span class="h3--body cart__quantity-selector">{{ item.quantity | t }}</span>
-                    <!-- hide input and display with span end -->
+
+
+                    <div class="input-group order-form-inputs">
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-number" data-type="minus" data-field="{{ variant.id }}">
+                          <span class="glyphicon glyphicon-minus"></span>
+                        </button>
+                      </span>
+                      <input type="number" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}" data-submit="true" class="form-control input-number text-center ajaxcart--hide">
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="{{ variant.id }}">
+                          <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                      </span>
+                    </div>
+
+
 
                   </div>
                 {% else %}
@@ -131,10 +157,8 @@
                 {% endif %}
 
                 <div class="grid__item one-third text-right">
-                  {% if item.line_price > 0 %}
-                    <span class="cart__mini-labels">{{ 'cart.label.total' | t }}</span>
-                    <span class="h3--body money">{{ item.line_price | money }}</span>
-                  {% endif %}
+                  <span class="cart__mini-labels">{{ 'cart.label.total' | t }}</span>
+                  <span class="h3--body money">{{ item.line_price | money }}</span>
                 </div>
               </div>
 
@@ -145,6 +169,21 @@
 
           </div>
         </div>
+
+
+
+        <!-- Image Repo -->
+        <div class="hidden" id="img-repo{{ item.product_id }}">
+          {% assign product = item.product %}
+          {% for image in product.images %}
+            <div class="item" id="image{{ product.id }}">
+              <img class="center-block img-responsive" title="{{ product.title }}" src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
+            </div>
+          {% endfor %}
+        </div>
+        <!-- Image Repo End -->
+
+
       {% endfor %}
     </div>
 
@@ -156,24 +195,16 @@
             - Make sure you have name="note" for the message to be submitted properly
         {% endcomment %}
         {% if settings.cart_notes_enable %}
-
-          <div class="grid__item large--one-half cart__instructions">
-            <p class="delivery-date">Delivery Date:&nbsp;&nbsp;<span id="date"></span></p><br><br>
-            <label class="cart__instructions__label" for="CartSpecialInstructions">Delivery instructions</label>
-            <textarea name="note" class="input-full" id="CartSpecialInstructions">{{ cart.note }}</textarea>
-          </div>
-
-
+          {% include "modelmeals-cart-notes" %}
         {% endif %}
+
         <div class="grid__item {% if settings.cart_notes_enable %} large--one-half text-right{% endif %}">
           <p class="cart__footer__text">
             <span class="cart__subtotal-title uppercase">{{ 'cart.general.subtotal' | t }}</span>
             <span class="h3--body cart__subtotal money">{{ cart.total_price | money }}</span>
           </p>
           <p class="cart__footer__text"><em>{{ 'cart.general.shipping_at_checkout' | t }}</em></p>
-          <!-- change update button to remove
-          <input type="submit" name="update" class="btn--secondary update-cart btn--large uppercase" value="{{ 'cart.general.update' | t }}"> -->
-          <input type="submit" id="remove" name="remove" class="btn--secondary update-cart btn--large uppercase" value="{{ 'cart.general.remove' | t }}">
+          <input type="submit" name="update" class="btn--secondary update-cart btn--large uppercase" value="{{ 'cart.general.update' | t }}">
           <span><input type="submit" name="checkout" class="btn uppercase btn--large checkout__button" value="{{ 'cart.general.checkout' | t }}"></span>
         </div>
       </div>
@@ -182,7 +213,6 @@
 
   </form>
 </div>
-{% include 'subscription-cart-footer' %}
 {% else %}
   {% comment %}
     The cart is empty
@@ -190,34 +220,11 @@
   <div class="wrapper page-margin text-center">
     <h3 class="uppercase h3">{{ 'cart.general.title' | t }}</h3>
     <p>{{ 'cart.general.empty' | t }}</p>
-    <a href="/collections/all" class="btn btn--large">{{ 'cart.general.continue_browsing_html' | t }}</a>
+    <a href="/pages/order" class="btn btn--large">{{ 'cart.general.continue_browsing_html' | t }}</a>
   </div>
 {% endif %}
 
 
 
-<!-- Clear cart -->
-<script>
-NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
-let inputs = document.querySelectorAll('.cart__quantity-selector');
-function removeFromCart() {
-  for (let input of inputs) {
-    input.setAttribute("value", 0);
-  }
-}
-if (inputs.length > 0) {
-  let clearCart = document.getElementById("remove");
-  clearCart.addEventListener('click', removeFromCart, false);
-}
-
-// Find and format next Sunday
-var today = new Date();
-var month = today.getMonth();
-console.log(today);
-var sunday = today.getDate() + ((7-today.getDay()));
-var year = today.getFullYear();
-if (document.getElementById('date')) {
-  document.getElementById('date').innerHTML = month + 1 + "/" + sunday + "/" + year;
-}
-
-</script>
+{% include "modelmeals-modal" %}
+{{ 'modelmeals-input-buttons.js' | asset_url | script_tag }}

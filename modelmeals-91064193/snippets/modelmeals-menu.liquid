@@ -1,0 +1,35 @@
+<div class="wrapper page-margin">
+  <div class="grid">
+    <div class="grid__item">
+      <div id="show-menu"></div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+/* Ajax data from subscriptions page */
+function getHTML() {
+  let html = this.responseText;
+  let parser = new DOMParser();
+  let domDoc = parser.parseFromString(html, "text/html");
+  let images = domDoc.querySelectorAll('img');
+  let menuImg;
+  for (let i = 0; i < images.length; i++) {
+    if (images[i].outerHTML.indexOf('menu') > -1) {
+      console.log(images[i].outerHTML);
+      menuImg = images[i].outerHTML;
+    }
+  }
+  document.getElementById('show-menu').innerHTML = menuImg;
+  document.getElementById('order-form-wrapper').classList.remove('hidden');
+}
+
+let requestHTML = new XMLHttpRequest();
+requestHTML.addEventListener("load", getHTML);
+requestHTML.open("GET", "/pages/menu");
+requestHTML.send();
+/* Ajax data from subscriptions page end */
+
+</script>

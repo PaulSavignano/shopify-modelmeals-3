@@ -1,0 +1,19 @@
+<div class="grid__item large--one-half cart__instructions">
+  <p class="delivery-date">Delivery Date:&nbsp;&nbsp;<span id="date"></span></p><br><br>
+  <label class="cart__instructions__label" for="CartSpecialInstructions">Delivery instructions</label>
+  <textarea name="note" class="input-full" id="CartSpecialInstructions">{{ cart.note }}</textarea>
+</div>
+
+
+
+<script>
+// Find and format next Sunday
+var today = new Date();
+var month = today.getMonth();
+console.log(today);
+var sunday = today.getDate() + ((7-today.getDay()));
+var year = today.getFullYear();
+if (document.getElementById('date')) {
+  document.getElementById('date').innerHTML = month + 1 + "/" + sunday + "/" + year;
+}
+</script>

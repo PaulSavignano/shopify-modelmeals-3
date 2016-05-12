@@ -50,11 +50,15 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .grid__item.one-half.medium-down--hide.price {
-  padding-left: 60px;
+  padding-left: 20px;
 }
 
 .grid__item.one-half.medium-down--hide.text-right.quantity {
   padding-right: 40px;
+}
+
+a:focus {
+    outline: none;
 }
 
 

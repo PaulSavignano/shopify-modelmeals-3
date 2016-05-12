@@ -1,1 +1,3 @@
-{% include "modelmeals-order3" %}
+{% assign myArray = "main-dish-options|side-dish-options|add-on-options" | split: "|" %}
+
+{% include "modelmeals-order-form" %}

@@ -1,0 +1,77 @@
+<!-- Modal -->
+<div class="modal fade" id="mm-modal" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button class="close" type="button" data-dismiss="modal">×</button>
+          <h3 class="modal-title"></h3>
+      </div>
+
+      <div class="modal-body"></div>
+
+      <div class="modal-footer">
+          <button class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal End -->
+
+<script>
+// Modal Carousel Script
+$("#modal-carousel").carousel({interval:false});
+
+/* change modal title when slide changes */
+$("#modal-carousel").on("slid.bs.carousel", function () {
+  $(".modal-title").html($(this).find(".active img").attr("title"));
+});
+
+/* click an image */
+$(".modal-img").click(function() {
+  var product = this.dataset.productid;
+  console.log('Product: ' + product);
+  var top_level_div = document.getElementById('img-repo' + product);
+  var count = top_level_div.getElementsByTagName('div').length;
+  console.log('count: ' + count);
+  var body = $(".modal-body");
+  var title = $(".modal-title");
+  body.empty();
+  title.empty();
+  var addCarousel = '';
+  if (count > 1) {
+    addCarousel = $('<div id="modal-carousel" class="carousel">\
+                      <div class="carousel-inner"></div>\
+                        <a class="carousel-control left" href="#modal-carousel" data-slide="prev">\
+                          <i class="glyphicon glyphicon-chevron-left"></i>\
+                        </a>\
+                        <a class="carousel-control right" href="#modal-carousel" data-slide="next">\
+                          <i class="glyphicon glyphicon-chevron-right"></i>\
+                        </a>\
+                      </div>');
+  } else {
+    addCarousel = $('<div id="modal-carousel" class="carousel">\
+                      <div class="carousel-inner"></div>\
+                      </div>');
+  }
+  body.append(addCarousel);
+  var content = $(".carousel-inner");
+  var repo = $("#img-repo" + product + " .item");
+  var repoCopy = repo.filter("#" + 'image' + product).clone();
+  var active = repoCopy.first();
+  active.addClass("active");
+  title.html(active.find("img").attr("title"));
+  content.append(repoCopy);
+  $("#modal-gallery").modal("show");
+});
+
+/* Click a product title */
+$(".modal-description").click(function(){
+    $(".modal-title").empty;
+    $(".modal-body").empty;
+    var title = $(this).data('title');
+    var description = $(this).data('description');
+    $(".modal-title").html(title);
+    $(".modal-body").html(description);
+    $("#modal-gallery").modal("show");
+});
+</script>
