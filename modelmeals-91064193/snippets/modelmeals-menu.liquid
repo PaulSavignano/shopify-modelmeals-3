@@ -11,12 +11,12 @@
 
 /* Ajax data from subscriptions page */
 function getHTML() {
-  let html = this.responseText;
-  let parser = new DOMParser();
-  let domDoc = parser.parseFromString(html, "text/html");
-  let images = domDoc.querySelectorAll('img');
-  let menuImg;
-  for (let i = 0; i < images.length; i++) {
+  var html = this.responseText;
+  var parser = new DOMParser();
+  var domDoc = parser.parseFromString(html, "text/html");
+  var images = domDoc.querySelectorAll('img');
+  var menuImg;
+  for (var i = 0; i < images.length; i++) {
     if (images[i].outerHTML.indexOf('menu') > -1) {
       console.log(images[i].outerHTML);
       menuImg = images[i].outerHTML;
@@ -26,7 +26,7 @@ function getHTML() {
   document.getElementById('order-form-wrapper').classList.remove('hidden');
 }
 
-let requestHTML = new XMLHttpRequest();
+var requestHTML = new XMLHttpRequest();
 requestHTML.addEventListener("load", getHTML);
 requestHTML.open("GET", "/pages/menu");
 requestHTML.send();

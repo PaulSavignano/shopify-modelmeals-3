@@ -26,13 +26,55 @@ function onSubscribe() {
   }
 }
 
-let subscribeButtons = document.querySelectorAll('.subscribe');
-for (let i = 0; i < subscribeButtons.length; i++) {
+var subscribeButtons = document.querySelectorAll('.subscribe');
+for (var i = 0; i < subscribeButtons.length; i++) {
   subscribeButtons[i].addEventListener('click', onSubscribe, false);
 }
 /* Subscribe button events end */
 
 
+
+
+
+window.onscroll = function() {
+  var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+  console.log(scrollTop);
+}
+
+
+// Get currency
+function getCurrency(x) {
+  return '$' + x.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+//  Get order total
+function getCartTotal() {
+  var priceInputs = document.querySelectorAll('.input-number')
+  var total = 0;
+  for (var i = 0; i < priceInputs.length; i++) {
+    var quantity = parseInt(priceInputs[i].value.replace(/\D/g, ''), 10)
+    if (quantity > 0) {
+      var price = priceInputs[i].dataset.price / 100;
+      lineTotal =  quantity * price;
+      total += lineTotal;
+      console.log(total);
+    }
+  }
+  var orderPrice = getCurrency(total);;
+  if (total > 0) {
+    document.getElementById('add-to-cart-order-form').value = 'ADD TO CART  |  ' + orderPrice;
+  } else {
+    document.getElementById('add-to-cart-order-form').value = 'ADD TO CART';
+  }
+}
+
+
+// Listen for click on inputs
+var inputButtons = document.querySelectorAll('.btn-number');
+for (var i = 0; i < inputButtons.length; i++) {
+  inputButtons[i].addEventListener('click', getCartTotal, false);
+  inputButtons[i].parentNode.parentNode.children[1].addEventListener('keyup', getCartTotal, false);
+}
+/* Get Total Order Cost */
 
 
 // Add to cart

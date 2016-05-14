@@ -1,4 +1,6 @@
 <!-- Check if order page or order-packages page -->
+
+
 {% include "modelmeals-menu" %}
 
 <div class="wrapper page-margin hidden" id="order-form-wrapper">
@@ -133,6 +135,7 @@
                               data-collectionid = "{{ collection.id }}";
                               data-image="{{ product.featured_image.src | product_img_url: 'thumb' }}"
                               data-product="{{ product.title }}"
+                              data-price="{{ product.price }}"
                               data-id="{{ variant.id }}"
                               data-subscribeid="{{ variant.metafields.subscriptions.discount_variant_id }}"
                               min = "0"
@@ -185,7 +188,7 @@
 
   <!-- Add to cart -->
   <div class="cart__row">
-    <div class="grid__item large--one-sixth medium-down--one-whole add-to-cart">
+    <div class="grid__item large--one-quarter medium-down--one-whole add-to-cart">
       <input class="btn btn--full btn--large add-to-cart-order-form" id="add-to-cart-order-form" value="ADD TO CART">
     </div>
   </div>

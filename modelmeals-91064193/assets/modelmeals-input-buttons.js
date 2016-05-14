@@ -1,17 +1,17 @@
 /* Plus and minus button events */
 function onChange(event) {
-  let input;
+  var input;
   if (this.classList.contains('btn-number')) {
     input = this.parentNode.parentNode.children[1];
   } else {
     input = this;
   }
   // handle plus and minus buttons
-  let qty = parseInt(input.value.replace(/\D/g, ''), 10);
+  var qty = parseInt(input.value.replace(/\D/g, ''), 10);
   if (isNaN(qty)) {
     qty = 0;
   }
-  let dataType = this.getAttribute('data-type');
+  var dataType = this.getAttribute('data-type');
   if (dataType === "minus") {
     if (qty > 0) {
       qty = qty - 1;
@@ -27,8 +27,8 @@ function onChange(event) {
   }
 }
 
-let inputButtons = document.querySelectorAll('.btn-number');
-for (let i = 0; i < inputButtons.length; i++) {
+var inputButtons = document.querySelectorAll('.btn-number');
+for (var i = 0; i < inputButtons.length; i++) {
   inputButtons[i].addEventListener('click', onChange, false);
 }
 /* Plus and minus button events end */
