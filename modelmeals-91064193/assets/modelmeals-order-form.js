@@ -33,18 +33,9 @@ for (var i = 0; i < subscribeButtons.length; i++) {
 /* Subscribe button events end */
 
 
-
-
-
-window.onscroll = function() {
-  var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-  console.log(scrollTop);
-}
-
-
 // Get currency
 function getCurrency(x) {
-  return '$' + x.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return '$ ' + x.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 //  Get order total
 function getCartTotal() {

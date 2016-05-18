@@ -20,7 +20,7 @@
 {% endcomment %}
 {% if cart.item_count > 0 %}
 <div class="wrapper page-margin">
-  <form action="/cart" method="post" novalidate class="cart">
+  <form action="/cart" method="post" novalidate class="cart" id="cart-form">
     <h3>{{ 'cart.general.title' | t }}</h3>
 
     <div class="cart__body">
@@ -204,7 +204,7 @@
             <span class="h3--body cart__subtotal money">{{ cart.total_price | money }}</span>
           </p>
           <p class="cart__footer__text"><em>{{ 'cart.general.shipping_at_checkout' | t }}</em></p>
-          <input type="submit" name="update" class="btn--secondary update-cart btn--large uppercase" value="{{ 'cart.general.update' | t }}">
+          <input id="update-cart" type="submit" name="update" class="btn--secondary update-cart btn--large uppercase hidden" value="{{ 'cart.general.update' | t }}">
           <span><input type="submit" name="checkout" class="btn uppercase btn--large checkout__button" value="{{ 'cart.general.checkout' | t }}"></span>
         </div>
       </div>
@@ -228,3 +228,130 @@
 
 {% include "modelmeals-modal" %}
 {{ 'modelmeals-input-buttons.js' | asset_url | script_tag }}
+<script>
+
+// Get currency
+function getCurrency(x) {
+  return '$ ' + x.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function displayCartUpdate(response, input) {
+  console.log(input.value);
+  var cartCostEl = document.querySelectorAll('.cartCost')[0].children[0];
+  var totalEl = document.querySelectorAll('.cart__subtotal')[0];
+  var total = response.total_price / 100;
+  var totalCost = getCurrency(total);
+  var priceEl = input.parentNode.parentNode.parentNode.children[2].children[1];
+  var items = response.items;
+
+  if (input.value == '') {
+    console.log('remove');
+    var row = input.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+    row.remove();
+  } else {
+    for (var x = 0; x < items.length; x++) {
+      if (items[x].id == input.dataset.id) {
+        var price = (items[x].price * input.value) / 100;
+        var cost = getCurrency(price);
+        priceEl.innerHTML = cost;
+      }
+    }
+  }
+  totalEl.innerHTML = totalCost;
+  cartCostEl.innerHTML = totalCost;
+}
+
+function deliveryNotes(response, input) {
+  //console.log(response);
+}
+function removeProduct(response, input) {
+
+  var row = input.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+  row.remove();
+}
+
+function makeAjaxCall() {
+  var input;
+  if (this.classList.contains('btn-number')) {
+    input = this.parentNode.parentNode.children[1];
+  } else {
+    input = this;
+  }
+  if (input.id === "CartSpecialInstructions") {
+    Shopify.updateCartFromForm(input, form, deliveryNotes);
+  } else if (input.value == '') {
+    Shopify.removeItem(input, displayCartUpdate);
+  } else {
+    Shopify.updateCartFromForm(input, form, displayCartUpdate);
+  }
+}
+
+Shopify.onError = function(XMLHttpRequest, textStatus) {
+  var data = eval('(' + XMLHttpRequest.responseText + ')');
+  if (!!data.message) {
+    console.log(data.message + '(' + data.status  + '): ' + data.description);
+  }
+};
+Shopify.onCartUpdate = function(cart) {
+  console.log('There are now ' + cart.item_count + ' items in the cart.');
+};
+
+var form = $('form[action="/cart"]');
+
+Shopify.updateCartFromForm = function(input, form, callback) {
+  var params = {
+    type: 'POST',
+    url: '/cart/update.js',
+    data: form.serialize(),
+    dataType: 'json',
+    success: function(response) {
+      if ((typeof callback) === 'function') {
+        callback(response, input);
+      }
+      else {
+        Shopify.onCartUpdate(response);
+      }
+    },
+    error: function(XMLHttpRequest, textStatus) {
+      Shopify.onError(XMLHttpRequest, textStatus);
+    }
+  };
+  jQuery.ajax(params);
+};
+
+
+Shopify.removeItem = function(input, callback) {
+  var variant_id = input.dataset.id;
+  var params = {
+    type: 'POST',
+    url: '/cart/change.js',
+    data:  'quantity=0&id='+variant_id,
+    dataType: 'json',
+    success: function(response) {
+      if ((typeof callback) === 'function') {
+        callback(response, input);
+      }
+      else {
+        Shopify.onCartUpdate(response);
+      }
+    },
+    error: function(XMLHttpRequest, textStatus) {
+      Shopify.onError(XMLHttpRequest, textStatus);
+    }
+  };
+  jQuery.ajax(params);
+};
+
+
+
+var inputButtons = document.querySelectorAll('.btn-number');
+for (var i = 0; i < inputButtons.length; i++) {
+  inputButtons[i].addEventListener('click', makeAjaxCall, false);
+  inputButtons[i].parentNode.parentNode.children[1].addEventListener('keyup', makeAjaxCall, false);
+}
+
+var textInput = document.getElementById('CartSpecialInstructions');
+textInput.addEventListener('blur', makeAjaxCall, false);
+
+
+</script>
