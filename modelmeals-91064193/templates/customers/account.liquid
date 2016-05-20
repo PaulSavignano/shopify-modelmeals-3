@@ -79,7 +79,7 @@
     <div class="grid__item one-third medium-down--one-whole">
       <p class="h4--body">{{ 'customer.account.details' | t }}</p>
 
-      <p class="h5--body">{{ customer.name }}</p>
+      <a href="/account?view=edit"><p class="h5--body">{{ customer.name }}</p></a>
 
 {% if customer.metafields.subscriptions.customer_string %}
 <!--BeginRechargeCode-->

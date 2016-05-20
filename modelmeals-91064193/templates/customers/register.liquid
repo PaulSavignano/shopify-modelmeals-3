@@ -26,8 +26,11 @@
         <label for="allergies" class="label--hidden">Allergies?</label>
         <input id="allergies" type="text" name="customer[note][Allergies]" placeholder="Allergies?" {% if form.note %}value="{{ form.note }}"{% endif %}/>
 
-        <label for="delivery-instructions" class="label--hidden">Delivery Instructions?</label>
-        <input id="delivery-instructions" type="text" name="customer[note][delivery-instructions]" placeholder="Delivery Instructions" />
+        <label for="allergies2" class="label--hidden">Allergies2?</label>
+        <input id="allergies2" type="text" name="customer[tags]" placeholder="Allergies2?" {% if form.tags %}value="{{ form.tags }}"{% endif %}/>
+
+        <label for="delivery-notes" class="label--hidden">Delivery Notes?</label>
+        <input id="delivery-notes" type="text" name="customer[note][delivery-notes]" placeholder="Delivery Notes" />
 
         <label for="how-did-you-hear-about-us" class="label--hidden">How did you hear about us?</label>
         <input id="how-did-you-hear-about-us" type="text" name="customer[note][How-did-you-hear-about-us]" placeholder="How did you hear about us?" />
