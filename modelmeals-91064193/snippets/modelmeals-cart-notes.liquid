@@ -7,6 +7,8 @@
 
 
 <script>
+console.log('{{ customer.metafields.customer.allergies }}');
+console.log('{% for field in customer.metafields.customer %}{{ field }}{% endfor %}')
 // Find and format next Sunday
 var today = new Date();
 var month = today.getMonth();
