@@ -18,8 +18,11 @@
     - Shopify Payments - http://docs.shopify.com/manual/more/shopify-payments/testing-shopify-payments
 
 {% endcomment %}
+
+
 {% if cart.item_count > 0 %}
 <div class="wrapper page-margin">
+  <div id="flash-message" class="alert alert-danger" data-alert="alert"></div>
   <form action="/cart" method="post" novalidate class="cart" id="cart-form">
     <h3>{{ 'cart.general.title' | t }}</h3>
 
@@ -111,9 +114,6 @@
                     {% endfor %}
                   {% endif %}
 
-                  <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="cart__remove uppercase lighten" data-id="{{ item.id }}">
-                    <small>{{ 'cart.general.remove' | t }}</small>
-                  </a>
                 </div>
 
               </div>
@@ -141,7 +141,19 @@
                           <span class="glyphicon glyphicon-minus"></span>
                         </button>
                       </span>
-                      <input type="number" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}" data-submit="true" class="form-control input-number text-center ajaxcart--hide">
+                      <input
+                        type="number"
+                        name="updates[]"
+                        id="updates_{{ item.id }}"
+                        value="{{ item.quantity }}"
+                        min="0"
+                        data-id="{{ item.id }}"
+                        data-submit="true"
+                        class="form-control input-number text-center ajaxcart--hide"
+                        {% unless item.variant.inventory_management == blank or item.variant.inventory_policy == 'continue' %}
+                          max="{{ item.variant.inventory_quantity }}"
+                        {% endunless %}
+                      >
                       <span class="input-group-btn">
                         <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="{{ variant.id }}">
                           <span class="glyphicon glyphicon-plus"></span>
@@ -195,6 +207,7 @@
             - Make sure you have name="note" for the message to be submitted properly
         {% endcomment %}
         {% if settings.cart_notes_enable %}
+
           {% include "modelmeals-cart-notes" %}
         {% endif %}
 
@@ -236,7 +249,6 @@ function getCurrency(x) {
 }
 
 function displayCartUpdate(response, input) {
-  console.log(input.value);
   var cartCostEl = document.querySelectorAll('.cartCost')[0].children[0];
   var totalEl = document.querySelectorAll('.cart__subtotal')[0];
   var total = response.total_price / 100;
@@ -245,7 +257,6 @@ function displayCartUpdate(response, input) {
   var items = response.items;
 
   if (input.value == '') {
-    console.log('remove');
     var row = input.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
     row.remove();
   } else {
@@ -264,27 +275,29 @@ function displayCartUpdate(response, input) {
 function deliveryNotes(response, input) {
   //console.log(response);
 }
-function removeProduct(response, input) {
 
+function removeProduct(response, input) {
   var row = input.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
   row.remove();
 }
 
-function makeAjaxCall() {
+
+
+
+function qtyAjaxCall() {
   var input;
   if (this.classList.contains('btn-number')) {
     input = this.parentNode.parentNode.children[1];
   } else {
     input = this;
   }
-  if (input.id === "CartSpecialInstructions") {
-    Shopify.updateCartFromForm(input, form, deliveryNotes);
-  } else if (input.value == '') {
+  if (input.value == '') {
     Shopify.removeItem(input, displayCartUpdate);
   } else {
     Shopify.updateCartFromForm(input, form, displayCartUpdate);
   }
 }
+
 
 Shopify.onError = function(XMLHttpRequest, textStatus) {
   var data = eval('(' + XMLHttpRequest.responseText + ')');
@@ -292,9 +305,13 @@ Shopify.onError = function(XMLHttpRequest, textStatus) {
     console.log(data.message + '(' + data.status  + '): ' + data.description);
   }
 };
+
 Shopify.onCartUpdate = function(cart) {
-  console.log('There are now ' + cart.item_count + ' items in the cart.');
+  //console.log('There are now ' + cart.item_count + ' items in the cart.');
 };
+
+
+
 
 var form = $('form[action="/cart"]');
 
@@ -319,7 +336,6 @@ Shopify.updateCartFromForm = function(input, form, callback) {
   jQuery.ajax(params);
 };
 
-
 Shopify.removeItem = function(input, callback) {
   var variant_id = input.dataset.id;
   var params = {
@@ -342,19 +358,63 @@ Shopify.removeItem = function(input, callback) {
   jQuery.ajax(params);
 };
 
+function noteAjaxCall() {
+  var allergyNote = document.getElementById('allergies').value;
+  var deliveryNote = document.getElementById('delivery').value;
+  var sumNote;
+
+  if (allergyNote && deliveryNote) {
+    sumNote = "Allergies: " + allergyNote + ", " + "Delivery: " + deliveryNote;
+  } else if (allergyNote) {
+    sumNote = "Allergies: " + allergyNote;
+  } else if (deliveryNote) {
+    sumNote = "Delivery: " + deliveryNote;
+  }
+
+  var displayCartNoteSum = document.getElementById('CartSpecialInstructions');
+  if (sumNote) {
+    displayCartNoteSum.value = sumNote.replace(', ', '\n');
+  } else {
+    displayCartNoteSum.value = '';
+  }
+
+  Shopify.updateCartNote(sumNote, deliveryNotes);
+}
+
+
+Shopify.updateCartNote = function(note, callback) {
+  var params = {
+    type: 'POST',
+    url: '/cart/update.js',
+    data: 'note=' + note,
+    dataType: 'json',
+    success: function(cart) {
+      if ((typeof callback) === 'function') {
+        callback(cart);
+      }
+      else {
+        Shopify.onCartUpdate(response);
+      }
+    },
+    error: function(XMLHttpRequest, textStatus) {
+      ShopifyAPI.onError(XMLHttpRequest, textStatus);
+    }
+  };
+  jQuery.ajax(params);
+};
+
 
 
 var inputButtons = document.querySelectorAll('.btn-number');
 for (var i = 0; i < inputButtons.length; i++) {
-  inputButtons[i].addEventListener('click', makeAjaxCall, false);
-  inputButtons[i].parentNode.parentNode.children[1].addEventListener('keyup', makeAjaxCall, false);
-}
-
-var textInput = document.getElementById('CartSpecialInstructions');
-if (textInput) {
-  textInput.addEventListener('blur', makeAjaxCall, false);
+  inputButtons[i].addEventListener('click', qtyAjaxCall, false);
+  inputButtons[i].parentNode.parentNode.children[1].addEventListener('keyup', qtyAjaxCall, false);
 }
 
 
+var noteInputs = document.querySelectorAll('.cart-note');
+for (var x = 0; x < noteInputs.length; x++) {
+  noteInputs[x].addEventListener('blur', noteAjaxCall, false);
+}
 
 </script>

@@ -1,9 +1,8 @@
 <!-- Check if order page or order-packages page -->
 
 
-
 <div class="wrapper page-margin hidden" id="order-form-wrapper">
-  {% include "modelmeals-menu" %}
+  <div id="flash-message" class="alert alert-danger" data-alert="alert"></div>
   <div class="cart__body">
     {% for myHandle in myArray %}
       {% assign collection = collections[myHandle] %}
@@ -102,7 +101,7 @@
 
                         <div class="grid__item one-half text-left">
                           <span class="cart__mini-labels">{{ 'cart.label.price' | t }}</span>
-                          <span class="h3--body money" id="price{{ variant.id }}">{{ product.price | money }}</span>
+                          <span class="h3--body money" id="price{{ variant.id }}">{{ variant.price | money }}</span>
                           {% if variant.metafields.subscriptions.discount_variant_id %}
                             <span class="subscribe-btn">
                               <button
@@ -111,7 +110,7 @@
                                 data-product="{{ product.id }}"
                                 data-variant="{{ variant.id }}"
                                 data-subscriptionvariant="{{ variant.metafields.subscriptions.discount_variant_id }}"
-                                data-regularprice="{{ product.price }}"
+                                data-regularprice="{{ variant.price }}"
                                 data-subscriptionprice="{{ variant.metafields.subscriptions.discount_variant_price }}"
                               >Subscribe</button>
                             </span>
@@ -135,18 +134,12 @@
                               data-collectionid = "{{ collection.id }}";
                               data-image="{{ product.featured_image.src | product_img_url: 'thumb' }}"
                               data-product="{{ product.title }}"
-                              data-price="{{ product.price }}"
+                              data-price="{{ variant.price }}"
                               data-id="{{ variant.id }}"
                               data-subscribeid="{{ variant.metafields.subscriptions.discount_variant_id }}"
                               min = "0"
-                              {% unless item.variant.inventory_management == blank or item.variant.inventory_policy == 'continue' %}
-                                {% assign max = variant.inventory_quantity %}
-                                {% for item in cart.items %}
-                                  {% if item.id == variant.id %}
-                                    {% assign max = max | minus: item.quantity %}
-                                  {% endif %}
-                                {% endfor %}
-                                max="{{ max }}"
+                              {% unless variant.inventory_management == blank or variant.inventory_policy == 'continue' %}
+                                max="{{ variant.inventory_quantity }}"
                               {% endunless %}
                               value=""
                             >

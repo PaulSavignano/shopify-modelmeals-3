@@ -1,18 +1,44 @@
 <div class="grid__item large--one-half cart__instructions">
   <p class="delivery-date">Delivery Date:&nbsp;&nbsp;<span id="date"></span></p><br><br>
-  <label class="cart__instructions__label" for="CartSpecialInstructions">Delivery Notes:</label>
-  <textarea name="note" class="input-full" id="CartSpecialInstructions">{{ cart.note }}</textarea>
+  <label class="cart__instructions__label" for="CartSpecialInstructions">Allergies?:</label>
+  <input type="text" id="allergies" class="cart-note" placeholder="Allergies we should be aware of?">
+  <label class="cart__instructions__label" for="CartSpecialInstructions">Delivery Instructions:</label>
+  <textarea
+    id="delivery"
+    class="cart-note"
+    placeholder="You'll enter your address at check out but please provide any specific delivery instructions for your driver here."
+  ></textarea>
+  <textarea
+    type="text"
+    name="note"
+    class="input-full"
+    id="CartSpecialInstructions"
+    style="display: none;"
+  ></textarea>
 </div>
 
 
 
 <script>
-console.log('{{ customer.metafields.customer.allergies }}');
-console.log('{% for field in customer.metafields.customer %}{{ field }}{% endfor %}')
+//
+var cartNote = "{% if note != '' %}{{ cart.note }}{% endif %}";
+var cartNoteLines = cartNote.replace(', ', '\n');
+if (cartNote !== '' && cartNote !== 'undefined') {
+  document.getElementById('CartSpecialInstructions').value = cartNoteLines;
+  if (cartNote.indexOf(', ') > 0) {
+    var cartText = cartNote.split(", ");
+    document.getElementById(cartText[0].toLowerCase().split(": ")[0]).value = cartText[0].split(': ')[1];
+    document.getElementById(cartText[1].toLowerCase().split(": ")[0]).value = cartText[1].split(': ')[1];
+  } else {
+    document.getElementById(cartNote.toLowerCase().split(": ")[0]).value = cartNote.split(': ')[1];
+  }
+}
+
+
+
 // Find and format next Sunday
 var today = new Date();
 var month = today.getMonth();
-console.log(today);
 var sunday = today.getDate() + ((7-today.getDay()));
 var year = today.getFullYear();
 if (document.getElementById('date')) {

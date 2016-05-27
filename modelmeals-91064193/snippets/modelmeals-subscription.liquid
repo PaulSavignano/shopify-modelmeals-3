@@ -1,6 +1,6 @@
 <div class="grid">
   <div class="grid__item">
-    <div id="show-menu"></div>
+    <div id="show-subscribe"></div>
   </div>
 </div>
 
@@ -13,20 +13,20 @@ function getHTML() {
   var parser = new DOMParser();
   var domDoc = parser.parseFromString(html, "text/html");
   var images = domDoc.querySelectorAll('img');
-  var menuImg;
+  var subscribeImg;
   for (var i = 0; i < images.length; i++) {
     var imageName = images[i].parentNode.parentNode.parentNode.children[0].innerHTML;
-    if (imageName === 'menu') {
-      menuImg = images[i].outerHTML;
+    if (imageName === 'subscribe') {
+      subscribeImg = images[i].outerHTML;
     }
   }
-  document.getElementById('show-menu').innerHTML = menuImg;
+  document.getElementById('show-subscribe').innerHTML = subscribeImg;
   document.getElementById('order-form-wrapper').classList.remove('hidden');
 }
 
 var requestHTML = new XMLHttpRequest();
 requestHTML.addEventListener("load", getHTML);
-requestHTML.open("GET", "/pages/menu");
+requestHTML.open("GET", "/pages/subscribe");
 requestHTML.send();
 /* Ajax data from subscriptions page end */
 

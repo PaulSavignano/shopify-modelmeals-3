@@ -47,7 +47,6 @@ function getCartTotal() {
       var price = priceInputs[i].dataset.price / 100;
       lineTotal =  quantity * price;
       total += lineTotal;
-      console.log(total);
     }
   }
   var orderPrice = getCurrency(total);;

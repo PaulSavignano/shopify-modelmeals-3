@@ -68,3 +68,18 @@ a:focus {
   float: right;
   padding-left: 0;
 }
+
+
+#flash-message {
+  position:fixed;
+  z-index:1400;
+  top: 0;
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: auto;
+  text-align:center;
+  width: 100%;
+  display:none;
+}

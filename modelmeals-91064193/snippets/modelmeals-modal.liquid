@@ -29,10 +29,8 @@ $("#modal-carousel").on("slid.bs.carousel", function () {
 /* click an image */
 $(".modal-img").click(function() {
   var product = this.dataset.productid;
-  console.log('Product: ' + product);
   var top_level_div = document.getElementById('img-repo' + product);
   var count = top_level_div.getElementsByTagName('div').length;
-  console.log('count: ' + count);
   var body = $(".modal-body");
   var title = $(".modal-title");
   body.empty();
