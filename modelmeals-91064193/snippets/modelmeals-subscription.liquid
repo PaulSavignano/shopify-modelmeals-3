@@ -1,6 +1,8 @@
-<div class="grid">
-  <div class="grid__item">
-    <div id="show-subscribe"></div>
+<div class="wrapper page-margin">
+  <div class="grid">
+    <div class="grid__item">
+      <div id="show-subscription"></div>
+    </div>
   </div>
 </div>
 
@@ -12,15 +14,14 @@ function getHTML() {
   var html = this.responseText;
   var parser = new DOMParser();
   var domDoc = parser.parseFromString(html, "text/html");
-  var images = domDoc.querySelectorAll('img');
-  var subscribeImg;
-  for (var i = 0; i < images.length; i++) {
-    var imageName = images[i].parentNode.parentNode.parentNode.children[0].innerHTML;
-    if (imageName === 'subscribe') {
-      subscribeImg = images[i].outerHTML;
+  var pageRtes = domDoc.querySelectorAll('.rte');
+  var pageBox;
+  for (var i = 0; i < pageRtes.length; i++) {
+    if (pageRtes[i].parentNode.children[0].innerHTML === 'subscribe') {
+      pageBox = pageRtes[i].parentNode.children[1].outerHTML;
     }
   }
-  document.getElementById('show-subscribe').innerHTML = subscribeImg;
+  document.getElementById('show-subscription').innerHTML = pageBox;
   document.getElementById('order-form-wrapper').classList.remove('hidden');
 }
 

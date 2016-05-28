@@ -2,7 +2,7 @@
 
 
 <div class="wrapper page-margin hidden" id="order-form-wrapper">
-  <div id="flash-message" class="alert alert-danger" data-alert="alert"></div>
+  {% include "modelmeals-flash-messages" %}
   <div class="cart__body">
     {% for myHandle in myArray %}
       {% assign collection = collections[myHandle] %}
@@ -36,7 +36,6 @@
                   <div class="grid--full cart__row--table-large">
 
 
-                    {% if product.featured_image %}
                       <div class="grid__item large--one-half">
                         <div class="grid--full cart__row--table-large">
                           <div class="grid__item one-quarter">
@@ -70,30 +69,6 @@
                           </div>
                         </div>
                       </div>
-                    {% else %}
-                      <div class="grid__item large--one-half">
-                        <div class="grid--full cart__row--table-large">
-                          <div class="grid__item cart__item__title">
-                            <a
-                              href="#"
-                              class="h4--body modal-description"
-                              data-toggle="modal"
-                              data-target="#mm-modal"
-                              data-title="{{ product.title }}"
-                              data-description="{{ product.description | strip_html }}"
-                            >
-                              {{ product.title }}
-                              {% unless variant.title contains 'Default' %}
-                                - {{ variant.title }}
-                              {% endunless %}
-                              {% unless variant.sku == '' %}
-                                - {{ variant.sku }}
-                              {% endunless %}
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    {% endif %}
 
 
                     <div class="grid__item large--one-half">

@@ -1,11 +1,3 @@
-/* Flashmessages */
-function closeFlashMessage() {
-  window.setTimeout(function () {
-    $("#flash-message").fadeOut(900);
-  }, 3000);
-}
-
-
 /* Plus and minus button events */
 function onClick(event) {
   $(".alert").alert()
