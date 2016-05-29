@@ -37,11 +37,27 @@ if (cartNote !== '' && cartNote !== 'undefined') {
 
 
 // Find and format next Sunday
-var today = new Date();
-var month = today.getMonth();
-var sunday = today.getDate() + ((7-today.getDay()));
-var year = today.getFullYear();
-if (document.getElementById('date')) {
-  document.getElementById('date').innerHTML = month + 1 + "/" + sunday + "/" + year;
+
+var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+function next(day) {
+  var today = new Date();
+  var today_day = today.getDay();
+  day = day.toLowerCase();
+  for (var i = 7; i--;) {
+    if (day === days[i]) {
+      day = (i < today_day) ? (i + 7) : i;
+      break;
+    }
+  }
+  var daysUntilNext = day - today_day;
+  var month = today.getMonth() + 1;
+  var dayNumber = today.getDate() + daysUntilNext;
+  var year = today.getFullYear();
+  if (document.getElementById('date')) {
+    document.getElementById('date').innerHTML = month + "/" + dayNumber + "/" + year;
+  }
 }
+
+next( "Sunday" );
 </script>

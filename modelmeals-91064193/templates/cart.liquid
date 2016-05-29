@@ -22,7 +22,7 @@
 
 {% if cart.item_count > 0 %}
 <div class="wrapper page-margin">
-  <div id="flash-message" class="alert alert-danger" data-alert="alert"></div>
+  {% include "modelmeals-flash-messages" %}
   <form action="/cart" method="post" novalidate class="cart" id="cart-form">
     <h3>{{ 'cart.general.title' | t }}</h3>
 

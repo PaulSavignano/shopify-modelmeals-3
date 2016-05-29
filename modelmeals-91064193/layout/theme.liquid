@@ -207,8 +207,6 @@
           {% for link in linklists[settings.footer_secondary_linklist].links %}
             <li><a href="{{ link.url }}">{{ link.title }}</a></li>
           {% endfor %}
-            <li>{{ powered_by_link }}</li>
-            <li><a href="http://corknine.com">{{ 'layout.footer.credit' | t }}</a></li>
         </ul>
 
         {% unless shop.enabled_payment_types == empty %}
