@@ -95,10 +95,8 @@
              <a href="/account">{{ 'customer.account.title' | t }}</a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
            {% else %}
              {{ 'layout.customer.log_in' | t | customer_login_link }}
-             {% if shop.customer_accounts_optional %}
              &nbsp; &middot; &nbsp;
              {{ 'layout.customer.create_account' | t | customer_register_link }}
-             {% endif %}
            {% endif %}
          </p>
          {% endif %}

@@ -44,20 +44,24 @@ function next(day) {
   var today = new Date();
   var today_day = today.getDay();
   day = day.toLowerCase();
+
   for (var i = 7; i--;) {
     if (day === days[i]) {
-      day = (i < today_day) ? (i + 7) : i;
-      break;
+        day = (i < today_day) ? (i + 7) : i;
+        break;
     }
   }
   var daysUntilNext = day - today_day;
-  var month = today.getMonth() + 1;
-  var dayNumber = today.getDate() + daysUntilNext;
-  var year = today.getFullYear();
-  if (document.getElementById('date')) {
-    document.getElementById('date').innerHTML = month + "/" + dayNumber + "/" + year;
-  }
+  return new Date().setDate(today.getDate() + daysUntilNext);
 }
 
-next( "Sunday" );
+// insert a week day
+var nextDate = new Date(next( "sunday" ));
+var month = nextDate.getMonth() + 1;
+var dayNumber = nextDate.getDate();
+var year = nextDate.getFullYear();
+
+if (document.getElementById('date')) {
+  document.getElementById('date').innerHTML = month + "/" + dayNumber + "/" + year;
+}
 </script>
